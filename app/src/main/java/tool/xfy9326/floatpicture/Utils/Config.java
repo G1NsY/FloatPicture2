@@ -54,9 +54,12 @@ public class Config {
 
     public final static String PREFERENCE_SHOW_NOTIFICATION_CONTROL = "show_notification_control";
     public final static String PREFERENCE_SHOW_FLOATING_CONTROL = "show_floating_control";
+    public final static String PREFERENCE_INTERFACE_LANGUAGE = "interface_language";
+    public final static String INTERFACE_LANGUAGE_SYSTEM = "system";
     public final static String PREFERENCE_FLOATING_CONTROL_X = "floating_control_x";
     public final static String PREFERENCE_FLOATING_CONTROL_Y = "floating_control_y";
     public final static String PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT = "floating_control_dock_right";
+    public final static String PREFERENCE_FLOATING_CONTROL_DOCK_EDGE = "floating_control_dock_edge";
     public final static String PREFERENCE_IMPORT_LEGACY_DATA = "import_legacy_data";
     public final static String PREFERENCE_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested";
     public final static String PREFERENCE_PRIVACY_ACCEPTED = "privacy_policy_accepted";
@@ -70,7 +73,6 @@ public class Config {
     public final static String PREFERENCE_LOCK_GESTURES_AFTER_SAVE = "lock_gestures_after_save";
 
     public final static String LICENSE_PATH_APPLICATION = "LICENSE";
-    public final static String PRIVACY_POLICY_PATH_APPLICATION = "PRIVACY_POLICY.txt";
     public static String DEFAULT_PICTURE_TEMP_DIR;
     static String DEFAULT_DATA_DIR;
     public static String DEFAULT_PICTURE_DIR;

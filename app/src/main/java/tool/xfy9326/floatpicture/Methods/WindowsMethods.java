@@ -1,6 +1,7 @@
 package tool.xfy9326.floatpicture.Methods;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
@@ -32,6 +33,7 @@ public class WindowsMethods {
         windowManager.addView(pictureView, layoutParams);
     }
 
+    @SuppressLint("RtlHardcoded")
     public static WindowManager.LayoutParams getDefaultLayout(Context context, int layoutPositionX, int layoutPositionY, boolean touchable, boolean overLayout) {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -47,7 +49,9 @@ public class WindowsMethods {
         }
         layoutParams.x = layoutPositionX;
         layoutParams.y = layoutPositionY;
-        layoutParams.gravity = Gravity.START | Gravity.TOP;
+        // Picture positions are stored as physical coordinates from the screen's
+        // top-left. Keep that coordinate system stable in RTL locales.
+        layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         // 锁定悬浮窗创建时的显示方向，避免相机等前台应用带动悬浮图片旋转。
         layoutParams.screenOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LOCKED;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;

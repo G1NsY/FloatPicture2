@@ -7,6 +7,8 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ import java.util.Locale;
 import java.text.DecimalFormatSymbols;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import tool.xfy9326.floatpicture.MainApplication;
 import tool.xfy9326.floatpicture.Methods.ImageMethods;
 import tool.xfy9326.floatpicture.Methods.IOMethods;
 import tool.xfy9326.floatpicture.Methods.ManageMethods;
@@ -48,11 +51,18 @@ import tool.xfy9326.floatpicture.Utils.Config;
 import tool.xfy9326.floatpicture.Utils.PictureData;
 
 public class PictureSettingsFragment extends PreferenceFragmentCompat {
-    private final static String WINDOW_CREATED = "WINDOW_CREATED";
     private static final float MAX_RESIZE_SCREEN_MULTIPLIER = 4f;
     private boolean Edit_Mode;
     private boolean originallyVisible = true;
-    private boolean Window_Created;
+    private boolean pictureSaved;
+    private boolean editorResumed;
+    private boolean editorClosed;
+    private boolean loadingPicture;
+    private int previewVisibility = View.VISIBLE;
+    private int adjustmentVisibility = View.VISIBLE;
+    private boolean resumeDialog;
+    private boolean previewSuspended;
+    private AlertDialog importDialog;
     private boolean onUseEditPicture = false;
     private LayoutInflater inflater;
     private PictureData pictureData;
@@ -85,7 +95,6 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window_Created = false;
         Edit_Mode = false;
         pictureData = new PictureData();
         inflater = LayoutInflater.from(getActivity());
@@ -107,7 +116,6 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         lastScreenWidth = size.x;
         lastScreenHeight = size.y;
 
-        restoreData(savedInstanceState);
         setMode();
         // PreferenceSet() will be called inside setMode's thread completion or here.
         // But setMode runs a thread. We should ensure PreferenceSet handles the initial summary.
@@ -142,107 +150,161 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(WINDOW_CREATED, true);
-        super.onSaveInstanceState(outState);
+    public void onResume() {
+        super.onResume();
+        editorResumed = true;
+        restoreUnsavedPreview();
     }
 
-    private void restoreData(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            Window_Created = savedInstanceState.getBoolean(WINDOW_CREATED, false);
-            windowManager = WindowsMethods.getWindowManager(requireActivity());
+    private void restoreUnsavedPreview() {
+        if (!Edit_Mode && !pictureSaved && !editorClosed) {
+            if (floatImageView != null) floatImageView.setVisibility(previewVisibility);
+            if (floatImageView_Edit != null) floatImageView_Edit.setVisibility(adjustmentVisibility);
+            if (resumeDialog && currentDialog != null) currentDialog.show();
+            resumeDialog = false;
+            previewSuspended = false;
         }
     }
 
+    @Override
+    public void onPause() {
+        editorResumed = false;
+        suspendUnsavedPreview();
+        super.onPause();
+    }
+
+    public void suspendUnsavedPreview() {
+        if (!Edit_Mode && !pictureSaved && !previewSuspended) {
+            if (floatImageView != null) previewVisibility = floatImageView.getVisibility();
+            if (floatImageView_Edit != null) adjustmentVisibility = floatImageView_Edit.getVisibility();
+            previewSuspended = true;
+            hideUnsavedPreview();
+            resumeDialog = currentDialog != null && currentDialog.isShowing();
+            if (resumeDialog) currentDialog.hide();
+        }
+    }
+
+    public void onEditorFocusChanged(boolean hasFocus) {
+        if (hasFocus && editorResumed) {
+            restoreUnsavedPreview();
+        } else if (!hasFocus && (currentDialog == null || !currentDialog.isShowing())) {
+            // Some launchers keep the editor RESUMED while showing live Recents.
+            // An adjustment dialog belonging to this editor may also take focus.
+            suspendUnsavedPreview();
+        }
+    }
+
+    private void hideUnsavedPreview() {
+        if (!Edit_Mode && !pictureSaved && (!editorResumed || previewSuspended)) {
+            if (floatImageView != null) floatImageView.setVisibility(View.INVISIBLE);
+            if (floatImageView_Edit != null) floatImageView_Edit.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        editorClosed = true;
+        if (importDialog != null) importDialog.dismiss();
+        if (!Edit_Mode && !pictureSaved) {
+            discardUnsavedPicture();
+        } else {
+            clearEditView();
+        }
+        super.onDestroy();
+    }
+
     private void setMode() {
-        Intent intent = Objects.requireNonNull(requireActivity().getIntent());
+        Activity owner = requireActivity();
+        Intent intent = Objects.requireNonNull(owner.getIntent());
         Edit_Mode = intent.getBooleanExtra(Config.INTENT_PICTURE_EDIT_MODE, false);
         final AlertDialog alertDialog;
         if (!Edit_Mode) {
             AlertDialog.Builder loading = new AlertDialog.Builder(requireActivity());
             loading.setCancelable(false);
-            loading.setOnCancelListener(dialog -> {
-                WindowsMethods.createWindow(windowManager, floatImageView, false, allow_picture_over_layout, position_x, position_y);
-                syncPositionToView(floatImageView, position_x, position_y);
-            });
             View mView = inflater.inflate(R.layout.dialog_loading,
                     requireActivity().findViewById(R.id.layout_dialog_loading));
             loading.setView(mView);
             alertDialog = loading.show();
+            importDialog = alertDialog;
         } else {
             // Existing pictures load quickly. Showing and immediately dismissing a
             // dimmed dialog here makes the entire settings screen visibly flash.
             alertDialog = null;
         }
+        loadingPicture = true;
         new Thread(() -> {
-            if (!Window_Created) {
-                if (Edit_Mode) {
-                    //Edit
-                    PictureId = intent.getStringExtra(Config.INTENT_PICTURE_EDIT_ID);
-                    pictureData.setDataControl(PictureId);
-                    PictureName = pictureData.getListArray().get(PictureId);
-                    originallyVisible = pictureData.getBoolean(
-                            Config.DATA_PICTURE_SHOW_ENABLED,
-                            Config.DATA_DEFAULT_PICTURE_SHOW_ENABLED);
-                    position_x = pictureData.getInt(Config.DATA_PICTURE_POSITION_X, Config.DATA_DEFAULT_PICTURE_POSITION_X);
-                    position_y = pictureData.getInt(Config.DATA_PICTURE_POSITION_Y, Config.DATA_DEFAULT_PICTURE_POSITION_Y);
-                    picture_degree = pictureData.getFloat(Config.DATA_PICTURE_DEGREE, Config.DATA_DEFAULT_PICTURE_DEGREE);
-                    picture_alpha = pictureData.getFloat(Config.DATA_PICTURE_ALPHA, Config.DATA_DEFAULT_PICTURE_ALPHA);
-                    allow_picture_over_layout = ManageMethods.resolvePictureOverLayout(
-                            requireContext(), PictureId);
-                    bitmap = ImageMethods.getShowBitmap(requireContext(), PictureId);
-                    default_zoom = ImageMethods.getDefaultZoom(requireContext(), bitmap, false);
-                    float zoom = pictureData.getFloat(Config.DATA_PICTURE_ZOOM, default_zoom);
-                    zoom_x = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_X, zoom);
-                    zoom_y = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_Y, zoom);
-                    floatImageView = ImageMethods.getFloatImageViewById(requireContext(), PictureId);
-                } else {
-                    //New
-                    originallyVisible = true;
-                    PictureId = ImageMethods.setNewImage(getActivity(), intent.getData());
-                    if (PictureId == null) {
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            activity.runOnUiThread(() -> {
-                                if (activity.isFinishing() || activity.isDestroyed()) return;
-                                // Dismiss without invoking the listener that creates a window.
-                                if (alertDialog != null) alertDialog.dismiss();
-                                Toast.makeText(activity, R.string.action_add_picture_failed,
-                                        Toast.LENGTH_LONG).show();
-                                activity.setResult(Activity.RESULT_CANCELED);
-                                activity.finish();
-                            });
-                        }
-                        return;
-                    }
-                    pictureData.setDataControl(PictureId);
-                    PictureName = ImageMethods.getImageDisplayName(requireContext(), intent.getData());
-                    if (PictureName == null || PictureName.isEmpty()) {
-                        PictureName = getString(R.string.new_picture_name);
-                    }
-                    position_x = Config.DATA_DEFAULT_PICTURE_POSITION_X;
-                    position_y = Config.DATA_DEFAULT_PICTURE_POSITION_Y;
-                    picture_alpha = Config.DATA_DEFAULT_PICTURE_ALPHA;
-                    picture_degree = Config.DATA_DEFAULT_PICTURE_DEGREE;
-                    allow_picture_over_layout = ManageMethods.resolvePictureOverLayout(requireContext());
-                    bitmap = ImageMethods.getShowBitmap(requireContext(), PictureId);
-                    default_zoom = ImageMethods.getDefaultZoom(requireContext(), bitmap, false);
-                    zoom_x = default_zoom;
-                    zoom_y = default_zoom;
-                    floatImageView = ImageMethods.createPictureView(requireContext(), bitmap, false, allow_picture_over_layout, zoom_x, zoom_y, picture_degree);
-                    floatImageView.setAlpha(picture_alpha);
-                    floatImageView.setPictureId(PictureId);
+            if (Edit_Mode) {
+                //Edit
+                PictureId = intent.getStringExtra(Config.INTENT_PICTURE_EDIT_ID);
+                pictureData.setDataControl(PictureId);
+                PictureName = pictureData.getListArray().get(PictureId);
+                originallyVisible = pictureData.getBoolean(
+                        Config.DATA_PICTURE_SHOW_ENABLED,
+                        Config.DATA_DEFAULT_PICTURE_SHOW_ENABLED);
+                position_x = pictureData.getInt(Config.DATA_PICTURE_POSITION_X, Config.DATA_DEFAULT_PICTURE_POSITION_X);
+                position_y = pictureData.getInt(Config.DATA_PICTURE_POSITION_Y, Config.DATA_DEFAULT_PICTURE_POSITION_Y);
+                picture_degree = pictureData.getFloat(Config.DATA_PICTURE_DEGREE, Config.DATA_DEFAULT_PICTURE_DEGREE);
+                picture_alpha = pictureData.getFloat(Config.DATA_PICTURE_ALPHA, Config.DATA_DEFAULT_PICTURE_ALPHA);
+                allow_picture_over_layout = ManageMethods.resolvePictureOverLayout(
+                        owner, PictureId);
+                bitmap = ImageMethods.getShowBitmap(owner, PictureId);
+                default_zoom = ImageMethods.getDefaultZoom(owner, bitmap, false);
+                float zoom = pictureData.getFloat(Config.DATA_PICTURE_ZOOM, default_zoom);
+                zoom_x = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_X, zoom);
+                zoom_y = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_Y, zoom);
+                floatImageView = ImageMethods.getFloatImageViewById(owner, PictureId);
+            } else {
+                //New
+                originallyVisible = true;
+                PictureId = ImageMethods.setNewImage(owner, intent.getData());
+                if (PictureId == null) {
+                    owner.runOnUiThread(() -> {
+                        loadingPicture = false;
+                        if (alertDialog != null) alertDialog.dismiss();
+                        if (editorClosed || owner.isFinishing() || owner.isDestroyed()) return;
+                        Toast.makeText(owner, R.string.action_add_picture_failed,
+                                Toast.LENGTH_LONG).show();
+                        owner.setResult(Activity.RESULT_CANCELED);
+                        owner.finish();
+                    });
+                    return;
                 }
-                requireActivity().runOnUiThread(() -> {
-                    PreferenceSet();
-                    if (Edit_Mode) {
-                        ManageMethods.prepareWindowForEditing(requireContext(), PictureId);
-                    }
-                    if (alertDialog != null) {
-                        alertDialog.cancel();
-                    }
-                });
+                pictureData.setDataControl(PictureId);
+                PictureName = ImageMethods.getImageDisplayName(owner, intent.getData());
+                if (PictureName == null || PictureName.isEmpty()) {
+                    PictureName = owner.getString(R.string.new_picture_name);
+                }
+                position_x = Config.DATA_DEFAULT_PICTURE_POSITION_X;
+                position_y = Config.DATA_DEFAULT_PICTURE_POSITION_Y;
+                picture_alpha = Config.DATA_DEFAULT_PICTURE_ALPHA;
+                picture_degree = Config.DATA_DEFAULT_PICTURE_DEGREE;
+                allow_picture_over_layout = ManageMethods.resolvePictureOverLayout(owner);
+                bitmap = ImageMethods.getShowBitmap(owner, PictureId);
+                default_zoom = ImageMethods.getDefaultZoom(owner, bitmap, false);
+                zoom_x = default_zoom;
+                zoom_y = default_zoom;
+                floatImageView = ImageMethods.createPictureView(owner, bitmap, false, allow_picture_over_layout, zoom_x, zoom_y, picture_degree);
+                floatImageView.setAlpha(picture_alpha);
+                floatImageView.setPictureId(PictureId);
             }
+            owner.runOnUiThread(() -> {
+                loadingPicture = false;
+                if (alertDialog != null) alertDialog.dismiss();
+                if (editorClosed || owner.isFinishing() || owner.isDestroyed()) {
+                    if (!Edit_Mode && !pictureSaved) discardUnsavedPicture();
+                    return;
+                }
+                PreferenceSet();
+                if (Edit_Mode) {
+                    ManageMethods.prepareWindowForEditing(owner, PictureId);
+                } else {
+                    // Imports may finish after the editor has gone into the background.
+                    hideUnsavedPreview();
+                    WindowsMethods.createWindow(windowManager, floatImageView, false,
+                            allow_picture_over_layout, position_x, position_y);
+                    syncPositionToView(floatImageView, position_x, position_y);
+                }
+            });
         }).start();
     }
 
@@ -328,6 +390,8 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         final int copyPositionX = position_x;
         final int copyPositionY = position_y;
         final boolean copyAllowOverLayout = allow_picture_over_layout;
+        final Context applicationContext = requireContext().getApplicationContext();
+        final MainApplication mainApplication = (MainApplication) applicationContext;
 
         new Thread(() -> {
             String copyId = ImageMethods.copyPictureFiles(PictureId);
@@ -348,14 +412,47 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 copyData.commit(copyName);
                 copied = copyData.getListArray().containsKey(copyId);
                 if (!copied) {
-                    ImageMethods.clearAllTemp(requireContext(), copyId);
+                    ImageMethods.clearAllTemp(applicationContext, copyId);
                 }
             }
 
             final boolean copySucceeded = copied;
-            Activity activity = getActivity();
-            if (activity == null) return;
-            activity.runOnUiThread(() -> {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (copySucceeded) {
+                    Bitmap copyBitmap = ImageMethods.getShowBitmap(
+                            applicationContext, copyId);
+                    if (copyBitmap != null) {
+                        boolean gesturesEnabled = PreferenceManager
+                                .getDefaultSharedPreferences(applicationContext)
+                                .getBoolean(Config.PREFERENCE_TOUCHABLE_POSITION_EDIT, false);
+                        boolean rotationEnabled = PreferenceManager
+                                .getDefaultSharedPreferences(applicationContext)
+                                .getBoolean(Config.PREFERENCE_PINCH_ROTATION, false);
+                        FloatImageView copyView = ImageMethods.createPictureView(
+                                applicationContext,
+                                copyBitmap,
+                                gesturesEnabled,
+                                copyAllowOverLayout,
+                                copyZoomX,
+                                copyZoomY,
+                                copyDegree);
+                        copyView.setScalable(gesturesEnabled);
+                        copyView.setRotatable(rotationEnabled);
+                        copyView.setAlpha(copyAlpha);
+                        copyView.setWindowPosition(copyPositionX, copyPositionY);
+                        ImageMethods.saveFloatImageViewById(
+                                applicationContext, copyId, copyView);
+                    }
+
+                    ManageListAdapter manageListAdapter = mainApplication.getManageListAdapter();
+                    if (manageListAdapter != null) {
+                        manageListAdapter.updateData();
+                        manageListAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                Activity activity = getActivity();
+                if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
                 loadingDialog.dismiss();
                 preference.setEnabled(true);
                 if (copySucceeded) {
@@ -482,7 +579,11 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
 
         outlineDialog.setOnDismissListener(dialog -> {
             outlinePreviewGeneration.incrementAndGet();
-            floatImageView.setVisibility(originalFloatViewVisibility);
+            if (floatImageView != null) {
+                previewVisibility = originalFloatViewVisibility;
+                floatImageView.setVisibility(originalFloatViewVisibility);
+                hideUnsavedPreview();
+            }
             previewView.setImageDrawable(null);
             if (displayedPreview[0] != null && !displayedPreview[0].isRecycled()) {
                 displayedPreview[0].recycle();
@@ -1666,6 +1767,7 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         if (!onUseEditPicture) {
             windowManager.removeViewImmediate(floatImageView);
             floatImageView.refreshDrawableState();
+            hideUnsavedPreview();
             WindowsMethods.createWindow(windowManager, FloatImageView_Edit, false,
                     allow_picture_over_layout, position_x, position_y);
             syncPositionToView(FloatImageView_Edit, position_x, position_y);
@@ -1693,6 +1795,7 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
             floatImageView_Edit.refreshDrawableState();
             bitmap_Edit.recycle();
             floatImageView.configureGestureImage(bitmap, zoom_x, zoom_y, picture_degree);
+            hideUnsavedPreview();
             WindowsMethods.createWindow(windowManager, floatImageView, false, allow_picture_over_layout, position_x, position_y);
             syncPositionToView(floatImageView, position_x, position_y);
         }
@@ -1704,12 +1807,18 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
             windowManager.removeViewImmediate(floatImageView_Edit);
             floatImageView_Edit.refreshDrawableState();
             bitmap_Edit.recycle();
+            hideUnsavedPreview();
             WindowsMethods.createWindow(windowManager, floatImageView, false, allow_picture_over_layout, position_x, position_y);
             syncPositionToView(floatImageView, position_x, position_y);
         }
     }
 
-    public void saveAllData() {
+    public boolean saveAllData() {
+        if (loadingPicture || editorClosed || floatImageView == null) return false;
+        // Another editor action such as "save as copy" may have written a new
+        // picture since this fragment loaded. Refresh the backing JSON before
+        // commit(), which writes the whole picture data file.
+        pictureData.setDataControl(PictureId);
         pictureData.put(Config.DATA_PICTURE_SHOW_ENABLED, Edit_Mode ? originallyVisible : true);
         pictureData.put(Config.DATA_PICTURE_ZOOM, zoom_x); // Backward compatibility: store X as main ZOOM? Or just ignore ZOOM? Let's update ZOOM to match X.
         pictureData.put(Config.DATA_PICTURE_ZOOM_X, zoom_x);
@@ -1731,11 +1840,13 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         WindowsMethods.updateWindow(windowManager, floatImageView, bitmap, global_touchable || global_rotatable, effective_over_layout, zoom_x, zoom_y, picture_degree, position_x, position_y);
         syncPositionToView(floatImageView, position_x, position_y);
         ImageMethods.saveFloatImageViewById(requireActivity(), PictureId, floatImageView);
+        pictureSaved = true;
         if (Edit_Mode) {
             ManageMethods.finishWindowEditing(requireContext(), PictureId, originallyVisible);
         } else if (!ManageMethods.allowsMultiplePictures(requireContext())) {
             ManageMethods.setWindowVisible(requireContext(), pictureData, PictureId, true);
         }
+        return true;
     }
 
     public void clearEditView() {
@@ -1748,16 +1859,11 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
 
     public void exit() {
         if (!Edit_Mode) {
-            if (floatImageView != null) {
-                if (floatImageView.isAttachedToWindow()) {
-                    windowManager.removeView(floatImageView);
-                }
-                floatImageView = null;
-            }
-            if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
-            bitmap = null;
-            if (PictureId != null) ImageMethods.clearAllTemp(requireActivity(), PictureId);
+            editorClosed = true;
+            if (!pictureSaved) discardUnsavedPicture();
         } else {
+            clearEditView();
+            if (floatImageView == null) return;
             float original_zoom = pictureData.getFloat(Config.DATA_PICTURE_ZOOM, zoom_x);
             float original_zoom_x = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_X, original_zoom);
             float original_zoom_y = pictureData.getFloat(Config.DATA_PICTURE_ZOOM_Y, original_zoom);
@@ -1781,6 +1887,34 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
             ManageMethods.finishWindowEditing(requireContext(), PictureId, originallyVisible);
         }
 
+    }
+
+    private void discardUnsavedPicture() {
+        // The loader owns the bitmap/files until its main-thread completion callback.
+        // That callback repeats cleanup if the editor was closed during the import.
+        if (loadingPicture) return;
+        onUseEditPicture = false;
+        if (currentDialog != null) {
+            currentDialog.dismiss();
+            currentDialog = null;
+        }
+        removePreviewWindow(floatImageView_Edit);
+        removePreviewWindow(floatImageView);
+        floatImageView_Edit = null;
+        floatImageView = null;
+        if (bitmap_Edit != null && !bitmap_Edit.isRecycled()) bitmap_Edit.recycle();
+        bitmap_Edit = null;
+        if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+        bitmap = null;
+        if (PictureId != null) {
+            // clearAllTemp only uses the picture ID, so no attached Activity is needed.
+            ImageMethods.clearAllTemp(getContext(), PictureId);
+            PictureId = null;
+        }
+    }
+
+    private void removePreviewWindow(FloatImageView view) {
+        if (view != null && view.isAttachedToWindow()) windowManager.removeViewImmediate(view);
     }
 
 }

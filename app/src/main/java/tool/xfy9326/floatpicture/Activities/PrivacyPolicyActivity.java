@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 import tool.xfy9326.floatpicture.Methods.IOMethods;
 import tool.xfy9326.floatpicture.Methods.ApplicationMethods;
 import tool.xfy9326.floatpicture.R;
-import tool.xfy9326.floatpicture.Utils.Config;
 
 public class PrivacyPolicyActivity extends AppCompatActivity {
     @Override
@@ -41,7 +40,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
         ((TextView) card.findViewById(R.id.licence_title)).setText(R.string.privacy_policy);
         ((TextView) card.findViewById(R.id.licence_url)).setText(R.string.privacy_contact_url);
         ((TextView) card.findViewById(R.id.licence_data)).setText(
-                IOMethods.readAssetText(this, Config.PRIVACY_POLICY_PATH_APPLICATION));
+                IOMethods.readAssetText(this, getString(R.string.privacy_policy_asset_path)));
         mainLayout.addView(card);
     }
 

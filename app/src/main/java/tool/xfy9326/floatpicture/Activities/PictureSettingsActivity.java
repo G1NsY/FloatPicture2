@@ -78,7 +78,9 @@ public class PictureSettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_picture_settings_save) {
-            mPictureSettingsFragment.saveAllData();
+            if (mPictureSettingsFragment == null || !mPictureSettingsFragment.saveAllData()) {
+                return true;
+            }
             Intent resultIntent = new Intent();
             if (getIntent().getBooleanExtra(Config.INTENT_PICTURE_EDIT_MODE, false)) {
                 resultIntent.putExtra(
@@ -94,10 +96,23 @@ public class PictureSettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
         if (mPictureSettingsFragment != null) {
-            mPictureSettingsFragment.clearEditView();
+            mPictureSettingsFragment.onEditorFocusChanged(hasFocus);
         }
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if (mPictureSettingsFragment != null) {
+            mPictureSettingsFragment.suspendUnsavedPreview();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
         System.gc();
         super.onDestroy();
     }

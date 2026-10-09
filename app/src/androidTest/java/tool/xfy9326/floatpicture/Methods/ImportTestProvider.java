@@ -20,6 +20,26 @@ import java.io.OutputStream;
 
 /** Test-only provider exercising gallery streams, file slices and camera metadata. */
 public class ImportTestProvider extends ContentProvider {
+    private volatile java.util.concurrent.CountDownLatch importStarted;
+    private volatile java.util.concurrent.CountDownLatch releaseImport;
+
+    @Override public android.os.Bundle call(String method, String arg, android.os.Bundle extras) {
+        android.os.Bundle result = new android.os.Bundle();
+        if ("holdImport".equals(method)) {
+            importStarted = new java.util.concurrent.CountDownLatch(1);
+            releaseImport = new java.util.concurrent.CountDownLatch(1);
+        } else if ("releaseImport".equals(method)) {
+            if (releaseImport != null) releaseImport.countDown();
+        } else if ("awaitImport".equals(method)) {
+            try {
+                result.putBoolean("started", importStarted != null && importStarted.await(
+                        10, java.util.concurrent.TimeUnit.SECONDS));
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        return result;
+    }
     static Uri uri(String kind) {
         return Uri.parse("content://tool.g1nsy.floatpicture.test.import/" + kind);
     }
@@ -43,6 +63,17 @@ public class ImportTestProvider extends ContentProvider {
 
     @Override public AssetFileDescriptor openAssetFile(Uri uri, String mode)
             throws FileNotFoundException {
+        if ("delayed".equals(uri.getLastPathSegment()) && releaseImport != null) {
+            importStarted.countDown();
+            try {
+                if (!releaseImport.await(15, java.util.concurrent.TimeUnit.SECONDS)) {
+                    throw new FileNotFoundException("Timed out waiting to release test import");
+                }
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                throw new FileNotFoundException("Interrupted test import");
+            }
+        }
         if ("denied".equals(uri.getLastPathSegment())) throw new SecurityException("Test denied URI");
         try {
             byte[] bytes = png();

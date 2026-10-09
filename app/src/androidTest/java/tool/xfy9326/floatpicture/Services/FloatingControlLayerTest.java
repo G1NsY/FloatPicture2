@@ -1,6 +1,7 @@
 package tool.xfy9326.floatpicture.Services;
 
 import android.app.Instrumentation;
+import android.app.UiAutomation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -87,6 +88,106 @@ public class FloatingControlLayerTest {
     }
 
     @Test
+    public void rotationKeepsDotAtSamePhysicalEdgePosition() throws Exception {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        java.util.Map<String, ?> saved = preferences.getAll();
+        String[] keys = {Config.PREFERENCE_FLOATING_CONTROL_X, Config.PREFERENCE_FLOATING_CONTROL_Y,
+                Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT,
+                Config.PREFERENCE_FLOATING_CONTROL_DOCK_EDGE};
+        try {
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_0);
+            settle();
+            assertEquals("Run rotation tests over an app that allows rotation", 0,
+                    windowManager.getDefaultDisplay().getRotation());
+            instrumentation.runOnMainSync(() -> showControllerOnSide(true));
+            settle();
+            int[] before = controllerLocation();
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_90);
+            settle();
+            assertEquals("Run rotation tests over an app that allows rotation", 1,
+                    windowManager.getDefaultDisplay().getRotation());
+            instrumentation.runOnMainSync(controller::onConfigurationChanged);
+            settle();
+            int[] landscape = controllerLocation();
+            // The right edge becomes the top edge. The along-edge physical coordinate
+            // must include the old status-bar offset, not just LayoutParams.y.
+            assertEquals("Dot slid along the glass after rotation", before[1], landscape[0]);
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_0);
+            settle();
+            instrumentation.runOnMainSync(controller::onConfigurationChanged);
+            settle();
+            assertArrayEquals("Returning to portrait must restore the dot", before, controllerLocation());
+            // Repeat in the opposite direction, including while the panel is open.
+            instrumentation.runOnMainSync(() -> invoke(controller, "expand"));
+            settle();
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_270);
+            settle();
+            assertEquals(3, windowManager.getDefaultDisplay().getRotation());
+            instrumentation.runOnMainSync(controller::onConfigurationChanged);
+            settle();
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_0);
+            settle();
+            instrumentation.runOnMainSync(() -> {
+                controller.onConfigurationChanged();
+                invoke(controller, "collapse");
+            });
+            settle();
+            assertArrayEquals("Panel rotation must preserve its collapsed anchor", before, controllerLocation());
+            // Exercise a corner, where changed bar insets can temporarily clamp the dot.
+            instrumentation.runOnMainSync(() -> {
+                controller.destroy();
+                showControllerOnSide(false);
+                setField(controller, "controllerY", 0);
+                setField(controller, "dockEdge", FloatingControlDocking.EDGE_TOP);
+                invoke(controller, "snapCollapsedToDockedEdge");
+                invoke(controller, "updateControllerWindowPosition");
+                windowManager.updateViewLayout((View) field(controller, "root"),
+                        (WindowManager.LayoutParams) field(controller, "layoutParams"));
+            });
+            settle();
+            int[] corner = controllerLocation();
+            for (int rotation : new int[]{1, 2, 3, 0, 3, 2, 1, 0}) {
+                instrumentation.getUiAutomation().setRotation(rotation);
+                settle();
+                assertEquals(rotation, windowManager.getDefaultDisplay().getRotation());
+                instrumentation.runOnMainSync(controller::onConfigurationChanged);
+                settle();
+                if (rotation == 0) {
+                    assertArrayEquals("Repeated rotations must not accumulate corner drift", corner, controllerLocation());
+                }
+            }
+            instrumentation.runOnMainSync(() -> invoke(controller, "remove"));
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_90);
+            settle();
+            instrumentation.runOnMainSync(controller::onConfigurationChanged);
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_FREEZE_0);
+            settle();
+            instrumentation.runOnMainSync(() -> {
+                controller.onConfigurationChanged();
+                invoke(controller, "show");
+            });
+            settle();
+            assertArrayEquals("Rotating while hidden must preserve the dot", corner, controllerLocation());
+        } finally {
+            instrumentation.getUiAutomation().setRotation(UiAutomation.ROTATION_UNFREEZE);
+            SharedPreferences.Editor editor = preferences.edit();
+            for (String key : keys) {
+                Object value = saved.get(key);
+                if (value instanceof Integer) editor.putInt(key, (Integer) value);
+                else if (value instanceof Boolean) editor.putBoolean(key, (Boolean) value);
+                else editor.remove(key);
+            }
+            editor.commit();
+        }
+    }
+
+    private int[] controllerLocation() {
+        int[] location = new int[2];
+        instrumentation.runOnMainSync(() -> ((View) field(controller, "root")).getLocationOnScreen(location));
+        return location;
+    }
+
+    @Test
     public void rightDockExpandsDirectlyInOneWindow() throws Exception {
         assertDirectExpansion(true);
     }
@@ -130,7 +231,8 @@ public class FloatingControlLayerTest {
     public void rightAnchoredControllerFollowsLeftwardDrag() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String[] keys = {Config.PREFERENCE_FLOATING_CONTROL_X, Config.PREFERENCE_FLOATING_CONTROL_Y,
-                Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT};
+                Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT,
+                Config.PREFERENCE_FLOATING_CONTROL_DOCK_EDGE};
         java.util.Map<String, ?> saved = preferences.getAll();
         try {
             instrumentation.runOnMainSync(() -> showControllerOnSide(true));

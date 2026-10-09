@@ -600,6 +600,7 @@ public class ManageMethods {
         mainApplication.setCurrentPictureId(targetPictureId);
         mainApplication.setPictureSequenceMode(true);
         mainApplication.setWinVisible(true);
+        notifyPictureVisibilityChanged(mainApplication);
         return true;
     }
 
@@ -621,6 +622,7 @@ public class ManageMethods {
         mainApplication.setCurrentPictureId(firstPictureId);
         mainApplication.setPictureSequenceMode(true);
         mainApplication.setWinVisible(true);
+        notifyPictureVisibilityChanged(mainApplication);
         return true;
     }
 
@@ -694,6 +696,7 @@ public class ManageMethods {
             }
         }
         mainApplication.setWinVisible(visible);
+        notifyPictureVisibilityChanged(mainApplication);
     }
 
     public static void hideAllWindowsRuntime(Context context) {
@@ -740,6 +743,14 @@ public class ManageMethods {
             mainApplication.setCurrentPictureId(id);
         }
         mainApplication.setWinVisible(hasAttachedWindow(context));
+        notifyPictureVisibilityChanged(mainApplication);
+    }
+
+    private static void notifyPictureVisibilityChanged(MainApplication mainApplication) {
+        ManageListAdapter manageListAdapter = mainApplication.getManageListAdapter();
+        if (manageListAdapter != null) {
+            manageListAdapter.notifyDataSetChanged();
+        }
     }
 
     private static void hideWindowById(Context mContext, String id) {

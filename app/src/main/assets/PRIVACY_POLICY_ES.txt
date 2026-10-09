@@ -1,0 +1,26 @@
+Política de privacidad de FloatPicture 2
+Última actualización: 7 de septiembre de 2026
+
+FloatPicture 2 es una herramienta de imágenes flotantes que funciona sin conexión. No requiere una cuenta ni incluye publicidad, análisis o servicios de seguimiento. La aplicación no sube automáticamente tus imágenes ni datos de uso a ningún servidor.
+
+Imágenes y datos locales
+Tú eliges las imágenes mediante el selector de archivos del sistema Android. Las imágenes seleccionadas y los ajustes que creas se copian al almacenamiento privado de la aplicación para que las imágenes flotantes sigan funcionando. Normalmente, otras aplicaciones no pueden acceder a este almacenamiento. Los datos se eliminan al desinstalar la aplicación; también puedes borrar imágenes individuales desde ella.
+
+Permisos
+Mostrar sobre otras aplicaciones: se usa únicamente para mostrar las imágenes flotantes que solicitas.
+Notificaciones: se usan para mostrar el panel de control persistente opcional del servicio de imágenes flotantes.
+Servicio en primer plano: mantiene disponibles las imágenes flotantes y sus controles visibles mientras utilizas otras aplicaciones.
+
+Uso compartido y conservación
+FloatPicture 2 no vende datos personales ni los comparte automáticamente con servicios externos. Las imágenes y ajustes locales permanecen en el almacenamiento de la aplicación hasta que los elimines o desinstales la aplicación.
+
+Copias de seguridad elegidas por el usuario
+Puedes exportar imágenes y parámetros de edición mediante el selector de archivos de Android. La aplicación no cifra las copias. Los archivos guardados fuera del almacenamiento específico de la aplicación permanecen tras desinstalarla hasta que los elimines. Si eliges una unidad en la nube u otro proveedor de documentos, este almacenará o transferirá la copia según sus propias condiciones y política de privacidad. La importación solo lee el archivo o carpeta que eliges y reemplaza la biblioteca únicamente después de tu confirmación.
+
+Páginas externas y apoyo opcional
+Algunas versiones muestran una imagen QR de cobro de Alipay proporcionada por el desarrollador para recibir apoyo voluntario. La imagen se incluye en la aplicación y se muestra localmente. La página de apoyo no abre aplicaciones de pago, no lee ni escribe el portapapeles y no envía imágenes, ajustes ni información de cuentas. Puedes hacer una captura y escanearla por separado en Alipay. Alipay procesa la información de pago según sus propias condiciones y política. FloatPicture 2 no procesa pagos, no recibe credenciales de pago ni desbloquea funciones por los pagos. Otras páginas externas están sujetas a sus propias políticas.
+
+Contacto
+Para consultas de privacidad o asistencia: nimedea@gmail.com
+Informes públicos de errores:
+https://github.com/G1NsY/FloatPicture2/issues

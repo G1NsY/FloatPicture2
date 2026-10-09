@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -79,9 +81,21 @@ final class FloatingControlManager {
     private Bitmap collapsedIconBitmap;
     private boolean expanded;
     private int precisionControlMode = PRECISION_CONTROL_NONE;
+    private int dockEdge;
     private boolean dockOnRight;
     private int controllerX;
     private int controllerY;
+    private int lastDisplayWidth;
+    private int lastDisplayHeight;
+    private int lastDisplayRotation;
+    private int lastDisplayLeft;
+    private int lastDisplayTop;
+    private FloatingControlDocking.Anchor dotRotationAnchor;
+    private int collapsedAnchorX;
+    private int collapsedAnchorY;
+    private int collapsedAnchorEdge;
+    private boolean hasCollapsedAnchor;
+    private boolean expandedDragged;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final Runnable raiseControl = this::bringControlToFront;
     private final Runnable pictureWindowAttached = () -> {
@@ -100,9 +114,21 @@ final class FloatingControlManager {
         touchSlop = ViewConfiguration.get(this.context).getScaledTouchSlop();
         controllerX = preferences.getInt(Config.PREFERENCE_FLOATING_CONTROL_X, dp(12));
         controllerY = preferences.getInt(Config.PREFERENCE_FLOATING_CONTROL_Y, dp(160));
-        updateDockSideFromPosition(dp(COLLAPSED_SIZE_DP));
-        dockOnRight = preferences.getBoolean(
-                Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT, dockOnRight);
+        captureDisplayState();
+        updateDockEdgeFromPosition(dp(COLLAPSED_SIZE_DP), dp(COLLAPSED_SIZE_DP));
+        if (preferences.contains(Config.PREFERENCE_FLOATING_CONTROL_DOCK_EDGE)) {
+            int savedEdge = preferences.getInt(
+                    Config.PREFERENCE_FLOATING_CONTROL_DOCK_EDGE, dockEdge);
+            if (FloatingControlDocking.isValidEdge(savedEdge)) {
+                dockEdge = savedEdge;
+            }
+        } else if (preferences.contains(Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT)) {
+            dockEdge = preferences.getBoolean(
+                    Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT, false)
+                    ? FloatingControlDocking.EDGE_RIGHT
+                    : FloatingControlDocking.EDGE_LEFT;
+        }
+        updateDockAlignment(dp(COLLAPSED_SIZE_DP));
     }
 
     void refreshVisibility() {
@@ -143,16 +169,54 @@ final class FloatingControlManager {
     }
 
     void onConfigurationChanged() {
-        if (root != null && root.isAttachedToWindow()) {
-            clampControllerPosition(
-                    expanded ? dp(236) : dp(COLLAPSED_SIZE_DP),
-                    expanded
-                            ? dp(expandedEstimatedHeightDp())
-                            : dp(COLLAPSED_SIZE_DP));
-            if (!expanded) {
-                snapCollapsedToDockedEdge();
-                saveControllerPosition();
+        Point newDisplaySize = getPhysicalDisplaySize();
+        Rect newDisplayFrame = getDisplayFrame();
+        int newDisplayRotation = windowManager.getDefaultDisplay().getRotation();
+        int currentWidth = expanded ? dp(236) : dp(COLLAPSED_SIZE_DP);
+        int currentHeight = expanded
+                ? dp(expandedEstimatedHeightDp())
+                : dp(COLLAPSED_SIZE_DP);
+        if (lastDisplayWidth > 0 && lastDisplayHeight > 0
+                && newDisplayRotation != lastDisplayRotation) {
+            if (dotRotationAnchor == null && (!expanded || hasCollapsedAnchor && !expandedDragged)) {
+                rememberDotRotationAnchor();
             }
+            int[] rotatedPosition = FloatingControlDocking.rotatePositionInFrame(
+                    controllerX, controllerY, currentWidth, currentHeight,
+                    lastDisplayWidth, lastDisplayHeight,
+                    lastDisplayRotation, newDisplayRotation,
+                    lastDisplayLeft, lastDisplayTop, newDisplayFrame.left, newDisplayFrame.top);
+            controllerX = rotatedPosition[0];
+            controllerY = rotatedPosition[1];
+            dockEdge = FloatingControlDocking.rotateEdge(
+                    dockEdge, lastDisplayRotation, newDisplayRotation);
+        }
+        if (dotRotationAnchor != null) {
+            int[] dot = dotRotationAnchor.position(
+                    newDisplayRotation, newDisplayFrame.left, newDisplayFrame.top);
+            int edge = dotRotationAnchor.edge(newDisplayRotation);
+            if (!expanded) {
+                controllerX = dot[0];
+                controllerY = dot[1];
+                dockEdge = edge;
+            } else if (hasCollapsedAnchor && !expandedDragged) {
+                collapsedAnchorX = dot[0];
+                collapsedAnchorY = dot[1];
+                collapsedAnchorEdge = edge;
+            }
+        }
+        lastDisplayWidth = newDisplaySize.x;
+        lastDisplayHeight = newDisplaySize.y;
+        lastDisplayRotation = newDisplayRotation;
+        lastDisplayLeft = newDisplayFrame.left;
+        lastDisplayTop = newDisplayFrame.top;
+        clampControllerPosition(currentWidth, currentHeight);
+        updateDockAlignment(currentWidth);
+        if (!expanded) {
+            snapCollapsedToDockedEdge();
+            saveControllerPosition();
+        }
+        if (root != null && root.isAttachedToWindow()) {
             updateControllerWindowPosition();
             windowManager.updateViewLayout(root, layoutParams);
         }
@@ -177,7 +241,7 @@ final class FloatingControlManager {
         layoutParams = createLayoutParams(
                 dp(COLLAPSED_SIZE_DP), dp(COLLAPSED_SIZE_DP));
         clampControllerPosition(dp(COLLAPSED_SIZE_DP), dp(COLLAPSED_SIZE_DP));
-        updateDockSideFromPosition(dp(COLLAPSED_SIZE_DP));
+        updateDockEdgeFromPosition(dp(COLLAPSED_SIZE_DP), dp(COLLAPSED_SIZE_DP));
         snapCollapsedToDockedEdge();
         updateControllerWindowPosition();
         try {
@@ -220,6 +284,7 @@ final class FloatingControlManager {
         precisionControlMode = PRECISION_CONTROL_NONE;
     }
 
+    @SuppressLint("RtlHardcoded")
     private WindowManager.LayoutParams createLayoutParams(int width, int height) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
@@ -228,10 +293,17 @@ final class FloatingControlManager {
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         params.format = PixelFormat.TRANSLUCENT;
-        params.gravity = Gravity.START | Gravity.TOP;
+        // Controller coordinates are physical screen coordinates, not logical
+        // start/end coordinates, so changing locale must not mirror its position.
+        params.gravity = Gravity.LEFT | Gravity.TOP;
         params.width = width;
         params.height = height;
         params.windowAnimations = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Match getDisplayFrame(), including when the foreground app hides its bars.
+            params.setFitInsetsTypes(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+            params.setFitInsetsIgnoringVisibility(true);
+        }
         // The controller must not request a display orientation: on some devices an
         // application overlay with LOCKED also forces the foreground app to stay portrait.
         // The picture overlay keeps its own orientation policy in WindowsMethods.
@@ -248,6 +320,8 @@ final class FloatingControlManager {
         confirmationAction = null;
         expanded = false;
         precisionControlMode = PRECISION_CONTROL_NONE;
+        hasCollapsedAnchor = false;
+        expandedDragged = false;
         transparencyButton = null;
         transparencyLabel = null;
         transparencySeekBar = null;
@@ -542,6 +616,14 @@ final class FloatingControlManager {
         // Keep the dot unchanged until the complete panel is drawn at its final
         // position. Resizing/moving the visible right-docked window makes Android
         // animate it horizontally even when windowAnimations is zero.
+        collapsedAnchorX = controllerX;
+        collapsedAnchorY = controllerY;
+        collapsedAnchorEdge = dockEdge;
+        hasCollapsedAnchor = true;
+        expandedDragged = false;
+        if (dotRotationAnchor == null) {
+            rememberDotRotationAnchor();
+        }
         bringControlToFront(true);
     }
 
@@ -549,6 +631,14 @@ final class FloatingControlManager {
         if (root == null || layoutParams == null) {
             return;
         }
+        if (hasCollapsedAnchor && !expandedDragged) {
+            controllerX = collapsedAnchorX;
+            controllerY = collapsedAnchorY;
+            dockEdge = collapsedAnchorEdge;
+        }
+        hasCollapsedAnchor = false;
+        expandedDragged = false;
+        updateDockAlignment(dp(COLLAPSED_SIZE_DP));
         buildCollapsedView();
         layoutParams.width = dp(COLLAPSED_SIZE_DP);
         layoutParams.height = dp(COLLAPSED_SIZE_DP);
@@ -886,6 +976,12 @@ final class FloatingControlManager {
                             dragged = true;
                         }
                         if (dragged) {
+                            // Only a user drag changes the physical anchor. Rotation/clamping
+                            // must not accumulate offsets when system bars move between edges.
+                            dotRotationAnchor = null;
+                            if (expanded) {
+                                expandedDragged = true;
+                            }
                             controllerX = downWindowX + Math.round(deltaX);
                             controllerY = downWindowY + Math.round(deltaY);
                             clampControllerPosition(
@@ -901,12 +997,14 @@ final class FloatingControlManager {
                     case MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         if (dragged) {
                             if (!expanded) {
-                                updateDockSideFromPosition(dp(COLLAPSED_SIZE_DP));
+                                updateDockEdgeFromPosition(
+                                        dp(COLLAPSED_SIZE_DP), dp(COLLAPSED_SIZE_DP));
                                 snapCollapsedToDockedEdge();
                                 updateControllerWindowPosition();
                                 windowManager.updateViewLayout(root, layoutParams);
                             } else {
-                                updateDockSideFromPosition(dp(236));
+                                updateDockEdgeFromPosition(
+                                        dp(236), dp(expandedEstimatedHeightDp()));
                                 updateControllerWindowPosition();
                                 windowManager.updateViewLayout(root, layoutParams);
                             }
@@ -926,38 +1024,126 @@ final class FloatingControlManager {
     }
 
     private void updateControllerWindowPosition() {
-        // Store positions from the physical left edge, but keep the window
-        // anchored to its docked edge as its width changes on expand/collapse.
-        layoutParams.gravity = Gravity.TOP | (dockOnRight ? Gravity.RIGHT : Gravity.LEFT);
-        if (dockOnRight) {
-            Point displaySize = new Point();
-            windowManager.getDefaultDisplay().getSize(displaySize);
-            layoutParams.x = displaySize.x - layoutParams.width - controllerX;
+        // Positions are relative to the inset-adjusted overlay frame's top-left.
+        // Gravity is selected so
+        // expanding a docked controller grows inward from its nearest screen edge.
+        boolean anchorRight = dockEdge == FloatingControlDocking.EDGE_RIGHT
+                || ((dockEdge == FloatingControlDocking.EDGE_TOP
+                || dockEdge == FloatingControlDocking.EDGE_BOTTOM) && dockOnRight);
+        boolean anchorBottom = dockEdge == FloatingControlDocking.EDGE_BOTTOM;
+        layoutParams.gravity = (anchorBottom ? Gravity.BOTTOM : Gravity.TOP)
+                | (anchorRight ? Gravity.RIGHT : Gravity.LEFT);
+        Point displaySize = getDisplaySize();
+        int effectiveWidth = layoutParams.width > 0 ? layoutParams.width : dp(236);
+        int effectiveHeight = layoutParams.height > 0
+                ? layoutParams.height
+                : dp(expandedEstimatedHeightDp());
+        if (anchorRight) {
+            layoutParams.x = displaySize.x - effectiveWidth - controllerX;
         } else {
             layoutParams.x = controllerX;
         }
-        layoutParams.y = controllerY;
+        if (anchorBottom) {
+            layoutParams.y = displaySize.y - effectiveHeight - controllerY;
+        } else {
+            layoutParams.y = controllerY;
+        }
     }
 
     private void clampControllerPosition(int width, int estimatedHeight) {
-        Point displaySize = new Point();
-        windowManager.getDefaultDisplay().getSize(displaySize);
+        Point displaySize = getDisplaySize();
         controllerX = Math.max(0, Math.min(controllerX, Math.max(0, displaySize.x - width)));
         controllerY = Math.max(0, Math.min(controllerY,
                 Math.max(0, displaySize.y - estimatedHeight)));
     }
 
-    private void updateDockSideFromPosition(int currentWidth) {
-        Point displaySize = new Point();
-        windowManager.getDefaultDisplay().getSize(displaySize);
-        dockOnRight = controllerX + currentWidth / 2 >= displaySize.x / 2;
+    private void updateDockEdgeFromPosition(int currentWidth, int currentHeight) {
+        Point displaySize = getDisplaySize();
+        dockEdge = FloatingControlDocking.nearestEdge(
+                controllerX, controllerY, currentWidth, currentHeight,
+                displaySize.x, displaySize.y, dockEdge);
+        updateDockAlignment(currentWidth);
+    }
+
+    private void updateDockAlignment(int currentWidth) {
+        Point displaySize = getDisplaySize();
+        if (dockEdge == FloatingControlDocking.EDGE_LEFT) {
+            dockOnRight = false;
+        } else if (dockEdge == FloatingControlDocking.EDGE_RIGHT) {
+            dockOnRight = true;
+        } else {
+            dockOnRight = controllerX + currentWidth / 2 >= displaySize.x / 2;
+        }
     }
 
     private void snapCollapsedToDockedEdge() {
-        Point displaySize = new Point();
-        windowManager.getDefaultDisplay().getSize(displaySize);
+        Point displaySize = getDisplaySize();
+        int bottomEdge = Math.max(0, displaySize.y - dp(COLLAPSED_SIZE_DP));
         int rightEdge = Math.max(0, displaySize.x - dp(COLLAPSED_SIZE_DP));
-        controllerX = dockOnRight ? rightEdge : 0;
+        switch (dockEdge) {
+            case FloatingControlDocking.EDGE_TOP -> controllerY = 0;
+            case FloatingControlDocking.EDGE_RIGHT -> controllerX = rightEdge;
+            case FloatingControlDocking.EDGE_BOTTOM -> controllerY = bottomEdge;
+            default -> controllerX = 0;
+        }
+        updateDockAlignment(dp(COLLAPSED_SIZE_DP));
+    }
+
+    private Point getDisplaySize() {
+        Rect frame = getDisplayFrame();
+        return new Point(frame.width(), frame.height());
+    }
+
+    private Point getPhysicalDisplaySize() {
+        Point displaySize = new Point();
+        windowManager.getDefaultDisplay().getRealSize(displaySize);
+        return displaySize;
+    }
+
+    private Rect getDisplayFrame() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            android.view.WindowMetrics metrics = windowManager.getMaximumWindowMetrics();
+            android.graphics.Insets insets = metrics.getWindowInsets().getInsetsIgnoringVisibility(
+                    WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+            Rect frame = new Rect(metrics.getBounds());
+            frame.left += insets.left;
+            frame.top += insets.top;
+            frame.right -= insets.right;
+            frame.bottom -= insets.bottom;
+            return frame;
+        }
+        // Legacy overlays use the visible display frame supplied by WindowManager.
+        if (root != null && root.isAttachedToWindow()) {
+            Rect frame = new Rect();
+            root.getWindowVisibleDisplayFrame(frame);
+            if (frame.width() > 0 && frame.height() > 0) {
+                return frame;
+            }
+        }
+        Point size = new Point();
+        windowManager.getDefaultDisplay().getSize(size);
+        int statusBarId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int top = statusBarId == 0 ? 0 : context.getResources().getDimensionPixelSize(statusBarId);
+        return new Rect(0, top, size.x, size.y);
+    }
+
+    private void captureDisplayState() {
+        Point displaySize = getPhysicalDisplaySize();
+        Rect frame = getDisplayFrame();
+        lastDisplayWidth = displaySize.x;
+        lastDisplayHeight = displaySize.y;
+        lastDisplayRotation = windowManager.getDefaultDisplay().getRotation();
+        lastDisplayLeft = frame.left;
+        lastDisplayTop = frame.top;
+    }
+
+    private void rememberDotRotationAnchor() {
+        dotRotationAnchor = new FloatingControlDocking.Anchor(
+                hasCollapsedAnchor ? collapsedAnchorX : controllerX,
+                hasCollapsedAnchor ? collapsedAnchorY : controllerY,
+                dp(COLLAPSED_SIZE_DP), lastDisplayWidth, lastDisplayHeight,
+                lastDisplayRotation, hasCollapsedAnchor ? collapsedAnchorEdge : dockEdge,
+                lastDisplayLeft, lastDisplayTop);
     }
 
     private Bitmap getTrimmedCollapsedIcon() {
@@ -998,6 +1184,7 @@ final class FloatingControlManager {
                 .putInt(Config.PREFERENCE_FLOATING_CONTROL_X, controllerX)
                 .putInt(Config.PREFERENCE_FLOATING_CONTROL_Y, controllerY)
                 .putBoolean(Config.PREFERENCE_FLOATING_CONTROL_DOCK_RIGHT, dockOnRight)
+                .putInt(Config.PREFERENCE_FLOATING_CONTROL_DOCK_EDGE, dockEdge)
                 .apply();
     }
 

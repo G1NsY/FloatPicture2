@@ -22,9 +22,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.util.HashMap;
 
-import tool.xfy9326.floatpicture.MainApplication;
 import tool.xfy9326.floatpicture.R;
 import tool.xfy9326.floatpicture.Services.NotificationService;
 import tool.xfy9326.floatpicture.Utils.Config;
@@ -129,35 +127,37 @@ public class ApplicationMethods {
 
     public static void ClearUselessTemp(final Context mContext) {
         new Thread(() -> {
-            File dir = new File(Config.DEFAULT_PICTURE_DIR);
-            String[] dirList = dir.list();
-            if (dir.exists() && dirList != null) {
-                if (dirList.length > 0) {
-                    HashMap<String, View> hashMap = ((MainApplication) mContext.getApplicationContext()).getRegister();
-                    if (hashMap.size() > 0) {
-                        File[] pictures = dir.listFiles();
-                        if (pictures != null) {
-                            for (File pic_file : pictures) {
-                                String fileName = pic_file.getName();
-                                String pictureId = fileName.endsWith(Config.PICTURE_OUTLINE_SOURCE_SUFFIX)
-                                        ? fileName.substring(0, fileName.length()
-                                        - Config.PICTURE_OUTLINE_SOURCE_SUFFIX.length())
-                                        : fileName;
-                                if (!hashMap.containsKey(pictureId)) {
-                                    //noinspection ResultOfMethodCallIgnored
-                                    pic_file.delete();
-                                    File temp_file = new File(Config.DEFAULT_PICTURE_TEMP_DIR + pic_file.getName());
-                                    if (temp_file.exists()) {
-                                        //noinspection ResultOfMethodCallIgnored
-                                        temp_file.delete();
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        //noinspection ResultOfMethodCallIgnored
-                        dir.delete();
-                    }
+            File pictureDirectory = new File(Config.DEFAULT_PICTURE_DIR);
+            File[] files = pictureDirectory.listFiles();
+            if (files == null) return;
+
+            // Runtime window registration is not a reliable inventory of stored
+            // pictures: hidden pictures and just-created copies may not have a
+            // registered view. Only clean interrupted file transactions here.
+            for (File file : files) {
+                if (!file.isFile() || !file.getName().endsWith(".backup")) continue;
+                File target = new File(file.getAbsolutePath().substring(
+                        0, file.getAbsolutePath().length() - ".backup".length()));
+                if (!target.exists()) {
+                    // Restore the last known complete image if replacement was
+                    // interrupted after moving the original aside.
+                    //noinspection ResultOfMethodCallIgnored
+                    file.renameTo(target);
+                } else {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
+                }
+            }
+
+            files = pictureDirectory.listFiles();
+            if (files == null) return;
+            for (File file : files) {
+                if (!file.isFile()) continue;
+                String name = file.getName();
+                if (name.endsWith(".replacement") || name.endsWith(".copying")) {
+                    // The canonical target (or restored backup) is authoritative.
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
                 }
             }
         }).start();

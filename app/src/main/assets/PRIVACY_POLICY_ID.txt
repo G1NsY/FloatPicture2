@@ -1,0 +1,26 @@
+Kebijakan Privasi FloatPicture 2
+Terakhir diperbarui: 7 September 2026
+
+FloatPicture 2 adalah alat gambar mengambang yang bekerja secara offline. Aplikasi tidak memerlukan akun dan tidak menyertakan iklan, analitik, atau layanan pelacakan. Aplikasi tidak mengunggah gambar atau data penggunaan Anda ke server secara otomatis.
+
+Gambar dan data lokal
+Anda memilih gambar melalui pemilih file sistem Android. Gambar yang dipilih dan pengaturan yang Anda buat disalin ke penyimpanan privat aplikasi agar gambar mengambang tetap berfungsi. Aplikasi lain biasanya tidak dapat mengakses penyimpanan ini. Data dihapus saat aplikasi dicopot; Anda juga dapat menghapus gambar satu per satu dari aplikasi.
+
+Izin
+Tampil di atas aplikasi lain: hanya digunakan untuk menampilkan gambar mengambang yang Anda minta.
+Notifikasi: digunakan untuk menampilkan panel kontrol persisten opsional bagi layanan gambar mengambang.
+Layanan latar depan: menjaga gambar mengambang yang Anda minta dan kontrolnya tetap tersedia saat Anda menggunakan aplikasi lain.
+
+Pembagian dan penyimpanan data
+FloatPicture 2 tidak menjual data pribadi atau membagikannya secara otomatis kepada layanan eksternal. Gambar dan pengaturan lokal tetap berada di penyimpanan aplikasi hingga Anda menghapusnya atau mencopot aplikasi.
+
+Cadangan yang dipilih pengguna
+Anda dapat mengekspor gambar dan parameter edit melalui pemilih file Android. Cadangan tidak dienkripsi oleh aplikasi. File yang disimpan di luar penyimpanan khusus aplikasi tetap ada setelah aplikasi dicopot hingga Anda menghapusnya. Jika memilih penyimpanan awan atau penyedia dokumen lain, penyedia tersebut menyimpan atau mentransfer cadangan berdasarkan ketentuan dan kebijakan privasinya. Impor hanya membaca file atau folder yang Anda pilih dan mengganti pustaka setelah konfirmasi Anda.
+
+Halaman eksternal dan dukungan opsional
+Beberapa versi menampilkan gambar QR penerimaan Alipay dari pengembang untuk dukungan sukarela. Gambar disertakan dalam aplikasi dan ditampilkan secara lokal. Halaman dukungan tidak membuka aplikasi pembayaran, membaca atau menulis papan klip, maupun mengirim gambar, pengaturan, atau informasi akun. Anda dapat mengambil tangkapan layar dan memindainya secara terpisah di Alipay. Alipay memproses informasi pembayaran berdasarkan ketentuan dan kebijakan privasinya. FloatPicture 2 tidak memproses pembayaran, menerima kredensial, atau membuka fitur berdasarkan pembayaran. Halaman eksternal lain tunduk pada kebijakan privasinya masing-masing.
+
+Kontak
+Untuk pertanyaan privasi atau dukungan: nimedea@gmail.com
+Laporan bug publik:
+https://github.com/G1NsY/FloatPicture2/issues

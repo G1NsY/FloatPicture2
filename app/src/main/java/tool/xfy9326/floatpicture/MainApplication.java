@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import tool.xfy9326.floatpicture.Tools.CrashHandler;
 import tool.xfy9326.floatpicture.Methods.BackupArchive;
+import tool.xfy9326.floatpicture.Methods.LocaleMethods;
 import tool.xfy9326.floatpicture.Utils.Config;
 import tool.xfy9326.floatpicture.View.FloatImageView;
 import tool.xfy9326.floatpicture.View.ManageListAdapter;
@@ -44,6 +45,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LocaleMethods.registerLayoutDirectionHandling(this);
+        LocaleMethods.applySavedLanguage(this);
         try {
             BackupArchive.recover(new java.io.File(getFilesDir(), "FloatPicture"));
         } catch (java.io.IOException exception) {

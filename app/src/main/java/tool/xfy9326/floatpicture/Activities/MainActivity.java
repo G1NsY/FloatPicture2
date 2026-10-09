@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         visibleInstance = new WeakReference<>(this);
+        // Floating controls can change the saved visibility of any picture while
+        // this activity is in the background. Rebind rows so their switches
+        // reflect the current state when the main screen is shown again.
+        if (manageListAdapter != null) {
+            manageListAdapter.notifyDataSetChanged();
+        }
         if (!isPrivacyAccepted()
                 && (privacyDialog == null || !privacyDialog.isShowing())) {
             showPrivacyAcknowledgement();

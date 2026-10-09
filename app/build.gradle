@@ -15,12 +15,10 @@ android {
         applicationId 'tool.g1nsy.floatpicture'
         minSdkVersion 19
         targetSdkVersion 36
-        versionCode 10
-        versionName '2.0.7(Beta)'
+        versionCode 18
+        versionName '2.0.9.3(Beta)'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         resValue 'bool', 'support_external_enabled', externalSupport
-
-        resourceConfigurations.add("zh")
 
         packaging {
             resources.excludes.addAll(
@@ -45,6 +43,14 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+
+    // Keep every translation in the installed app so the in-app language
+    // picker can switch languages that differ from the device language.
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     buildTypes {

@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import java.util.Objects;
 
 import tool.xfy9326.floatpicture.Methods.ManageMethods;
+import tool.xfy9326.floatpicture.Methods.LocaleMethods;
 import tool.xfy9326.floatpicture.Activities.BackupActivity;
 import tool.xfy9326.floatpicture.R;
 import tool.xfy9326.floatpicture.Utils.Config;
@@ -53,6 +54,15 @@ public class GlobalSettingsFragment extends PreferenceFragmentCompat {
         if (sharedPreferences == null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         }
+
+        requirePreference(Config.PREFERENCE_INTERFACE_LANGUAGE)
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    String language = String.valueOf(newValue);
+                    // Let ListPreference persist first, then recreate the activity in the new locale.
+                    requireActivity().getWindow().getDecorView().post(
+                            () -> LocaleMethods.applyLanguage(requireContext(), language));
+                    return true;
+                });
 
         Preference qualityPref = requirePreference(Config.PREFERENCE_NEW_PICTURE_QUALITY);
         int currentVal = sharedPreferences.getInt(Config.PREFERENCE_NEW_PICTURE_QUALITY, 80);

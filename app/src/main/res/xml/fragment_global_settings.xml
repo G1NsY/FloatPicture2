@@ -4,6 +4,14 @@
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/settings_general">
+        <ListPreference
+            app:defaultValue="system"
+            app:entries="@array/interface_language_entries"
+            app:entryValues="@array/interface_language_values"
+            app:iconSpaceReserved="false"
+            app:key="interface_language"
+            app:title="@string/settings_interface_language"
+            app:useSimpleSummaryProvider="true" />
         <CheckBoxPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"

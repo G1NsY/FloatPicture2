@@ -36,6 +36,19 @@ public class GlobalSettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            // Some older Android/EMUI versions cache the manifest activity label
+            // in the package manager after an in-app locale change. Resolve the
+            // title from this activity's localized context instead.
+            actionBar.setTitle(R.string.settings_global_label);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.settings_global_label);
         }
     }
 

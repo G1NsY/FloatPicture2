@@ -31,6 +31,8 @@
     <string name="permission_warn_storage_intent">请授予应用储存权限！</string>
     <string name="save">保存</string>
     <string name="settings_general">通用设置</string>
+    <string name="settings_interface_language">界面语言</string>
+    <string name="interface_language_system">跟随系统</string>
     <string name="settings_label">图片设置</string>
     <string name="settings_picture_control">图片控制设置</string>
     <string name="settings_picture_name">图片名称</string>
@@ -108,13 +110,11 @@
     <string name="support_other_ways_message">把应用分享给需要的人、清楚地描述使用中遇到的问题、提出改进建议，也是在帮助项目成长。\n\n使用应用功能不需要付费。</string>
     <string name="support_thanks">感谢你的鼓励与支持。</string>
     <string name="author">XFY9326(逸雪飞扬)</string>
-    <string name="website">https://github.com/G1NsY/FloatPicture2</string>
     <string name="application_author">原作者：</string>
     <string name="application_modified_by">当前开发与维护：</string>
-    <string name="modified_author">G1NsY(RY)</string>
     <string name="open_source_license">版权与开源许可</string>
     <string name="privacy_policy">隐私政策</string>
-    <string name="privacy_contact_url">https://github.com/G1NsY/FloatPicture2/issues</string>
+    <string name="privacy_policy_asset_path">PRIVACY_POLICY_ZH.txt</string>
     <string name="privacy_acknowledgement_title">使用前说明</string>
     <string name="privacy_acknowledgement_message">悬浮图片2只会在本机处理你主动选择的图片。应用需要悬浮窗权限来显示图片，并可能使用通知显示可选的控制面板。请在继续前阅读隐私政策。</string>
     <string name="privacy_agree_and_continue">同意并继续</string>
@@ -164,7 +164,6 @@
     <string name="settings_global_allow_drag_over_screen">允许图片溢出屏幕</string>
     <string name="settings_global_allow_drag_over_screen_sum">作为新建图片的默认值；已有图片请在图片设置中单独调整</string>
     <string name="notification_picture_count">共%1$s个图片悬浮窗</string>
-    <string name="notification_picture_position">%1$d / %2$d · %3$s</string>
     <string name="imageview_notification_visible">显示或隐藏当前图片</string>
     <string name="imageview_notification_previous">切换到上一张图片</string>
     <string name="imageview_notification_next">切换到下一张图片</string>
@@ -182,7 +181,6 @@
     <string name="floating_control_open_application">打开或隐藏主界面</string>
     <string name="floating_control_close">收起图片控制菜单</string>
     <string name="floating_control_no_picture">暂无图片</string>
-    <string name="floating_control_picture_status">%1$d / %2$d · %3$s</string>
     <string name="floating_control_toggle_picture">显示或隐藏当前图片</string>
     <string name="floating_control_transparency">透明度 %1$d%%</string>
     <string name="floating_control_transparency_unavailable">透明度 --</string>
