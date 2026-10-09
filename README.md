@@ -168,4 +168,4 @@ FloatPicture 2 基于 XFY9326 的 FloatPicture 1.9.2 开发，由 G1NsY 继续�
 - 原始作品版权所有 © 2017 XFY9326
 - 修改部分版权所有 © 2026 G1NsY
 - 本项目基于 GNU GPL v3 或更高版本授权，详情请参阅 [LICENSE](LICENSE)。
-- 隐私说明提供[中文](app/src/main/assets/PRIVACY_POLICY_ZH.txt)、[英文](app/src/main/assets/PRIVACY_POLICY_EN.txt)、[西班牙文](app/src/main/assets/PRIVACY_POLICY_ES.txt)、[巴西葡萄牙文](app/src/main/assets/PRIVACY_POLICY_PT_BR.txt)、[印度尼西亚文](app/src/main/assets/PRIVACY_POLICY_ID.txt)、[日文](app/src/main/assets/PRIVACY_POLICY_JA.txt)和[俄文](app/src/main/assets/PRIVACY_POLICY_RU.txt)版本。
+- 隐私说明提供[中文](app/src/main/assets/PRIVACY_POLICY_ZH.txt)、[英文](app/src/main/assets/PRIVACY_POLICY_EN.txt)、[西班牙文](app/src/main/assets/PRIVACY_POLICY_ES.txt)、[巴西葡萄牙文](app/src/main/assets/PRIVACY_POLICY_PT_BR.txt)、[印度尼西亚文](app/src/main/assets/PRIVACY_POLICY_ID.txt)、[日文](app/src/main/assets/PRIVACY_POLICY_JA.txt)、[俄文](app/src/main/assets/PRIVACY_POLICY_RU.txt)和[阿拉伯文](app/src/main/assets/PRIVACY_POLICY_AR.txt)版本。
