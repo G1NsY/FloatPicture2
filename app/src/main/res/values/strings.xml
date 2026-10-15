@@ -17,7 +17,7 @@
     <string name="backup_export_failed">Backup failed. Your current data has not been changed. Check free space and file access, and avoid editing pictures during export. Do not uninstall the app or use any incomplete backup file.</string>
     <string name="backup_restore_failed">Could not restore this data. It may be incomplete, damaged, unsupported, or unreadable, or storage may be full. Your previous library is retained; try another file or folder.</string>
     <string name="backup_picker_unavailable">Cannot open the file picker. Enable the system Files app and try again.</string>
-    <string name="app_name">FloatPicture 2</string>
+    <string name="app_name">FloatPicture</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -103,15 +103,15 @@
     <string name="exit_application">Exit</string>
     <string name="about">About</string>
     <string name="support_development">Support development</string>
-    <string name="support_heading">Support FloatPicture 2</string>
-    <string name="support_intro">Maintained and improved by G1NsY. Thank you for making FloatPicture 2 part of your creative workflow.</string>
+    <string name="support_heading">Support FloatPicture</string>
+    <string name="support_intro">Maintained and improved by G1NsY. Thank you for making FloatPicture part of your creative workflow.</string>
     <string name="support_alipay_title">Support via Alipay</string>
-    <string name="support_optional_message">If FloatPicture 2 helps you, you can voluntarily support its continued development and maintenance. Give only what you are comfortable with.\n\nSupport does not unlock extra features, exclusive content or services. All app features work the same whether or not you contribute.</string>
+    <string name="support_optional_message">If FloatPicture helps you, you can voluntarily support its continued development and maintenance. Give only what you are comfortable with.\n\nSupport does not unlock extra features, exclusive content or services. All app features work the same whether or not you contribute.</string>
     <string name="support_view_qr">View full QR image</string>
     <string name="support_qr_description">Alipay collection QR code provided by the developer</string>
     <string name="support_qr_hint">Take a screenshot, then open Scan in Alipay and select it from your album.</string>
     <string name="support_close_qr">Back to support</string>
-    <string name="support_payment_note">View the full image and take a screenshot. In Alipay, open Scan and choose the screenshot from your album. Check the recipient and amount before paying. FloatPicture 2 does not process payments, receive payment credentials or unlock features based on support.</string>
+    <string name="support_payment_note">View the full image and take a screenshot. In Alipay, open Scan and choose the screenshot from your album. Check the recipient and amount before paying. FloatPicture does not process payments, receive payment credentials or unlock features based on support.</string>
     <string name="support_other_ways_title">Every contribution matters</string>
     <string name="support_other_ways_message">Sharing the app with people who need it, describing problems clearly, and suggesting improvements also help the project grow.\n\nYou never need to pay to use the app’s features.</string>
     <string name="support_thanks">Thank you for your encouragement and support.</string>
@@ -126,7 +126,7 @@
     <string name="privacy_policy_asset_path">PRIVACY_POLICY_EN.txt</string>
     <string name="privacy_contact_url" translatable="false">https://github.com/G1NsY/FloatPicture2/issues</string>
     <string name="privacy_acknowledgement_title">Before you continue</string>
-    <string name="privacy_acknowledgement_message">FloatPicture 2 processes the pictures you choose only on this device. It needs overlay permission to show floating pictures and may use notifications for the optional control panel. Please review the privacy policy before continuing.</string>
+    <string name="privacy_acknowledgement_message">FloatPicture processes the pictures you choose only on this device. It needs overlay permission to show floating pictures and may use notifications for the optional control panel. Please review the privacy policy before continuing.</string>
     <string name="privacy_agree_and_continue">Agree and continue</string>
     <string name="view_privacy_policy">View privacy policy</string>
     <string name="copyright">Original work Copyright © 2017 XFY9326.\nModifications Copyright © 2026 G1NsY.\nLicensed under GNU GPL v3 or later.</string>

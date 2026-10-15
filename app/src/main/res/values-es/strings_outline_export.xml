@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">Exportar a la galería</string>
+    <string name="settings_picture_outline_export_success">Dibujo aplicado y PNG guardado en el álbum FloatPicture.</string>
+    <string name="settings_picture_outline_export_failed">Dibujo aplicado, pero la exportación falló. Revisa el espacio disponible e inténtalo de nuevo.</string>
+    <string name="settings_picture_outline_export_permission">Permite el acceso al almacenamiento para exportar el dibujo a la galería.</string>
+</resources>

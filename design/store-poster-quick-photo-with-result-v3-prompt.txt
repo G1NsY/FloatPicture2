@@ -1,0 +1,20 @@
+状态：待用户确认
+工具：内置 imagegen
+编辑底图：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-quick-photo-with-result-v2.png
+摆放参考：C:/Users/AAA/AppData/Local/Temp/codex-clipboard-35e77139-0275-46fd-86b2-21f348964d81.png（棋盘格为示意图编辑痕迹，不复制）
+截图参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图6.jpg
+成片参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/ChatGPT 图像 2026年10月14日 15_53_08.png
+变化：副标题改为“有参考，不烧心”；手机整体下移，照片卡上移，并遮住更多下方截图UI。
+保留：原标题、品牌、男主、原屏幕及照片内容、背景和画幅。
+结果：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/成品宣传图/快速出片-线稿对照与成片-v3.png
+工作区副本：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-quick-photo-with-result-v3.png
+检查：副标题准确为“有参考，不烧心”；手机下移，右下角照片卡上移并覆盖手机底部的部分截图UI；棋盘格未进入结果。
+
+Use case: precise-object-edit / compositing. Edit the completed 9:16 FloatPicture app-store poster in Image 1. Image 1 is the EDIT TARGET and establishes the exact desired character, typography, color palette, background, screenshots and visual style. Image 2 is a rough MANUAL LAYOUT GUIDE ONLY for how much lower the phone should be and how the small clean-photo card should overlap its lower-right corner. Image 2 contains a gray checkerboard transparency artifact and black outside border; DO NOT copy those artifacts. Do not use Image 2 as the final base.
+Image 3 is the original exact phone screenshot with the woman in pink and CYAN line-art overlay, included only to help preserve the existing phone's contents during repositioning. Image 4 is the original clean finished pink-dress photo, included only to preserve the existing small photo card's contents. Do not make any new people or substitute either screenshot/photo.
+Make these precise edits to Image 1:
+1. Replace ONLY the BLUE SUBTITLE text '有参考，人人都是摄影师' with the EXACT Chinese text '有参考，不烧心'. The new subtitle must be complete, correctly spelled, with comma punctuation, left-aligned in the exact same position, blue typeface, font weight and font size. Keep the navy main headline '快速出片，轻松拍好' and the 'FloatPicture' brand unchanged and clearly readable.
+2. Move the ENTIRE virtual phone frame together with its screen content DOWN a little, around 80–100 pixels on this roughly 941 x 1672 portrait poster. Keep the phone's current size, orientation and x-position; do not separately offset or change anything inside its screen. Its top should now sit lower than the brand line, roughly where shown in Image 2, while maintaining clear separation from the subtitle and brand. Keep the blue frame, camera UI, woman in pink, cyan overlay and photo at the same relative scale within the phone. All important upper camera and center image content stays visible.
+3. Move the small tilted clean-result photo card UP about 50–80 pixels so it overlaps the lower-right area of the phone MORE than before, closely following Image 2's layering. The result photo card sits IN FRONT of the phone and may obscure part of the phone's bottom camera controls, which is acceptable. Retain the card's current small size, white border, mild tilt and realistic original photograph; keep the entire card inside the poster bounds and keep the woman’s raised hand, face and pink dress visible. The card should never cover the woman's face in the phone or the central cyan line-art demonstration.
+Keep the left anime photographer completely unchanged: face, cap, clothes, camera, pointing hand, stance and shoes. Preserve Image 1's soft pale-blue and warm-ivory background with all blue shapes, white flecks and ground shadows; extend the real background naturally where objects moved. Keep the small curved arrow only if it naturally fits the new positions without tangling with card borders. Keep the same vertical poster dimensions.
+No '成片' label, no added words, no checkerboard, no black outside border, no extra people, no watermarks or app-store badges. This is a focused layout and subtitle edit, not a redesign.

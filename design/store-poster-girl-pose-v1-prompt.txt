@@ -1,0 +1,24 @@
+状态：待用户确认
+工具：内置 imagegen
+主参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图1.jpg
+人物参考：E:/AndroidAPP/FloatPicture2相关材料/动画/女生v3-草图.png
+固定画风参考：动画角色改图技能 assets/reference.png 与 assets/style-female.png
+动作参考：codex-clipboard-43c979a2-af7c-48fb-8aad-4499724c1eca.png
+变化项：设计竖版宣传图，女生改为抬手仰望姿势。
+保留项：原截图内容、女生身份发型服饰；画风参考仅负责人物线条和赛璐璐表现。
+预定结果：design/store-poster-girl-pose-v1.png
+
+Use case: ads-marketing / compositing.
+Create ONE polished finished vertical 9:16 Google Play app promotional poster, approximately 1080x1920 composition. This is a graphic design poster mixing a REAL PROVIDED SCREENSHOT with ONE hand-drawn anime mascot outside it.
+Reference roles:
+Image 1 = exact screenshot to insert in the poster. Preserve its complete visual contents, colors, park photographic background, cyan reference outline, all Chinese camera UI labels and icons, black top and bottom controls. Insert it faithfully as a flat front-facing screenshot, uniformly scaled, without stretching, cropping, repainting, replacing UI or inventing interface. Keep the original tall aspect ratio.
+Image 2 = character identity and outfit reference, a four-view model sheet. Extract ONLY ONE girl conceptually, no model-sheet panels or text. Retain the same expressive large brown eyes and facial proportions, dark brown hair with loose bangs and one thick long side braid tied with an orange-red bow, ivory beret with small orange-red tag, cornflower-blue puff-sleeve blouse with white five-petal flowers, button front and ruffled sleeve cuffs, high-waisted ivory ankle-length skirt, white sneakers.
+Images 3 and 4 = equal-authority fixed character DRAWING STYLE references only: traditional 2D hand-drawn anime, delicate clean contour lines, restrained internal details, flat color and controlled cel shadows. Do NOT copy their sunset, lighting, park, boy, phone, framing, or mood.
+Image 5 = ONLY the pose reference for the cartoon girl, also matches the cyan pose shown inside image 1. Do not copy its real person, photo rendering or background. Girl's arm on viewer's left raised high with bent elbow and an open relaxed hand reaching upwards; head tilted upward looking towards her raised fingertips, cheerful natural smile; arm on viewer's right extends diagonally down with relaxed fingers; torso gently leaning with a graceful balanced stance. Render her full body including both complete hands, hat and sneakers. Maintain the model sheet's hairstyle and outfit when changing the pose. Anatomically sensible fingers and elbows.
+Layout: pale powder-blue and warm ivory minimal background, subtle smooth gradient, one quiet large pale-blue rounded organic shape behind the screenshot. Generous clear margins, clean professional mobile store editorial typography, no busy scenery outside screenshot. Top area about 20% reserved for left-aligned headline and subtitle with a small brand line below. Lower area has a large sharp screenshot card on the RIGHT, very thin dark rounded edge and subtle shadow, no elaborate phone hardware or perspective. The single anime girl is to its LEFT, her feet align near the screenshot bottom, her raised hand reaches into the free middle-left area. Her silhouette may overlap ONLY a tiny section of the screenshot's lower-left outer border, never hide central cyan reference figure or camera shutter button. Keep screenshot visually dominant and readable. The girl is a friendly supporting mascot, not enlarged to obscure the app. No cutout white rectangle or model sheet behind her.
+Exact poster text, and ONLY these three lines besides the screenshot's original UI:
+Large bold headline: "对着参考拍"
+Smaller subtitle: "姿势、构图更直观"
+Small brand: "FloatPicture"
+Set headline in very legible contemporary Chinese sans-serif dark navy, subtitle quieter slate blue, brand restrained. Correct exact Chinese punctuation, no extra tagline, no badges, no call-to-action, no watermark, no store logos, no feature lists.
+The overall impression: airy, clean, warm and approachable blue-and-cream promotional design. Keep the source screenshot's actual content visible, while the fully colored cartoon girl outside the screenshot mirrors its raised-arm pose. Only one cartoon mascot outside the screen.

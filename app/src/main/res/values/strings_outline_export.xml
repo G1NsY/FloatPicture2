@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">Export to gallery</string>
+    <string name="settings_picture_outline_export_success">Line art applied and PNG saved to the FloatPicture album.</string>
+    <string name="settings_picture_outline_export_failed">Line art applied, but export failed. Check storage space and try again.</string>
+    <string name="settings_picture_outline_export_permission">Allow storage access to export line art to your gallery.</string>
+</resources>

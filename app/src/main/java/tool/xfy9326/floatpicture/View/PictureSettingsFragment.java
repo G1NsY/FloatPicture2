@@ -1,12 +1,15 @@
 package tool.xfy9326.floatpicture.View;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
@@ -30,6 +33,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -42,6 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import tool.xfy9326.floatpicture.MainApplication;
 import tool.xfy9326.floatpicture.Methods.ImageMethods;
+import tool.xfy9326.floatpicture.Methods.GalleryExporter;
 import tool.xfy9326.floatpicture.Methods.IOMethods;
 import tool.xfy9326.floatpicture.Methods.ManageMethods;
 import tool.xfy9326.floatpicture.Methods.PicturePicker;
@@ -91,6 +98,27 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
     private int lastScreenHeight;
     private AlertDialog currentDialog;
     private final AtomicInteger outlinePreviewGeneration = new AtomicInteger();
+    private int outlineRadius = 2;
+    private int outlineContrast = 65;
+    private int outlineColor = ImageMethods.OUTLINE_RED;
+    private boolean outlineGrayBackground;
+    private Runnable pendingOutlineExport;
+    private Runnable cancelOutlineExport;
+    private Runnable resumeOutlineExport;
+    private final ActivityResultLauncher<String> outlineStoragePermission = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), granted -> {
+                Runnable action = granted ? pendingOutlineExport : cancelOutlineExport;
+                pendingOutlineExport = null;
+                cancelOutlineExport = null;
+                if (!isAdded() || editorClosed) return;
+                if (granted && !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    resumeOutlineExport = action;
+                } else if (action != null) {
+                    action.run();
+                }
+                if (!granted) Toast.makeText(requireContext(),
+                        R.string.settings_picture_outline_export_permission, Toast.LENGTH_LONG).show();
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,6 +182,11 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         super.onResume();
         editorResumed = true;
         restoreUnsavedPreview();
+        if (resumeOutlineExport != null) {
+            Runnable action = resumeOutlineExport;
+            resumeOutlineExport = null;
+            action.run();
+        }
     }
 
     private void restoreUnsavedPreview() {
@@ -204,6 +237,9 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onDestroy() {
         editorClosed = true;
+        pendingOutlineExport = null;
+        cancelOutlineExport = null;
+        resumeOutlineExport = null;
         if (importDialog != null) importDialog.dismiss();
         if (!Edit_Mode && !pictureSaved) {
             discardUnsavedPicture();
@@ -237,6 +273,14 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 //Edit
                 PictureId = intent.getStringExtra(Config.INTENT_PICTURE_EDIT_ID);
                 pictureData.setDataControl(PictureId);
+                outlineRadius = Math.max(1, Math.min(8,
+                        pictureData.getInt(Config.DATA_PICTURE_OUTLINE_RADIUS, 2)));
+                outlineContrast = Math.max(0, Math.min(100,
+                        pictureData.getInt(Config.DATA_PICTURE_OUTLINE_CONTRAST, 65)));
+                outlineColor = pictureData.getInt(
+                        Config.DATA_PICTURE_OUTLINE_COLOR, ImageMethods.OUTLINE_RED);
+                outlineGrayBackground = pictureData.getBoolean(
+                        Config.DATA_PICTURE_OUTLINE_GRAY_BACKGROUND, false);
                 PictureName = pictureData.getListArray().get(PictureId);
                 originallyVisible = pictureData.getBoolean(
                         Config.DATA_PICTURE_SHOW_ENABLED,
@@ -390,6 +434,10 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         final int copyPositionX = position_x;
         final int copyPositionY = position_y;
         final boolean copyAllowOverLayout = allow_picture_over_layout;
+        final int copyOutlineRadius = outlineRadius;
+        final int copyOutlineContrast = outlineContrast;
+        final int copyOutlineColor = outlineColor;
+        final boolean copyOutlineGrayBackground = outlineGrayBackground;
         final Context applicationContext = requireContext().getApplicationContext();
         final MainApplication mainApplication = (MainApplication) applicationContext;
 
@@ -409,6 +457,10 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 copyData.put(Config.DATA_PICTURE_POSITION_Y, copyPositionY);
                 copyData.put(Config.DATA_PICTURE_DEGREE, copyDegree);
                 copyData.put(Config.DATA_ALLOW_PICTURE_OVER_LAYOUT, copyAllowOverLayout);
+                copyData.put(Config.DATA_PICTURE_OUTLINE_RADIUS, copyOutlineRadius);
+                copyData.put(Config.DATA_PICTURE_OUTLINE_CONTRAST, copyOutlineContrast);
+                copyData.put(Config.DATA_PICTURE_OUTLINE_COLOR, copyOutlineColor);
+                copyData.put(Config.DATA_PICTURE_OUTLINE_GRAY_BACKGROUND, copyOutlineGrayBackground);
                 copyData.commit(copyName);
                 copied = copyData.getListArray().containsKey(copyId);
                 if (!copied) {
@@ -495,8 +547,11 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 R.id.check_outline_gray_background);
         SeekBar detailBar = dialogView.findViewById(R.id.seek_outline_detail);
         SeekBar contrastBar = dialogView.findViewById(R.id.seek_outline_contrast);
-        detailBar.setProgress(1); // Radius 2: close to Photoshop's useful default.
-        contrastBar.setProgress(65);
+        View exportButton = dialogView.findViewById(R.id.button_outline_export);
+        Context exportContext = requireContext().getApplicationContext();
+        detailBar.setProgress(outlineRadius - 1);
+        contrastBar.setProgress(outlineContrast);
+        grayBackgroundCheck.setChecked(outlineGrayBackground);
 
         int maxPreviewSide = 900;
         float previewScale = Math.min(1f, maxPreviewSide
@@ -516,6 +571,12 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 ImageMethods.OUTLINE_BLACK,
                 ImageMethods.OUTLINE_WHITE
         };
+        for (int index = 0; index < outlineColors.length; index++) {
+            if (outlineColors[index] == outlineColor) {
+                colorSpinner.setSelection(index);
+                break;
+            }
+        }
 
         AlertDialog outlineDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.settings_picture_outline)
@@ -611,18 +672,52 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 int outlineColor = outlineColors[colorSpinner.getSelectedItemPosition()];
                 boolean keepGrayBackground = grayBackgroundCheck.isChecked();
                 new Thread(() -> applyOutline(outlineSource, radius, contrast, outlineColor,
-                                keepGrayBackground,
+                                keepGrayBackground, false, exportContext,
                                 outlineDialog, progressBar, detailBar, contrastBar,
                                 colorSpinner, grayBackgroundCheck),
                         "FloatPicture-outline-apply").start();
             });
+            exportButton.setOnClickListener(button -> {
+                Runnable export = () -> {
+                    if (!isAdded() || editorClosed || !outlineDialog.isShowing()) return;
+                    outlinePreviewGeneration.incrementAndGet();
+                    setOutlineDialogEnabled(outlineDialog, detailBar, contrastBar,
+                            colorSpinner, grayBackgroundCheck, false);
+                    progressBar.setVisibility(View.VISIBLE);
+                    int radius = detailBar.getProgress() + 1;
+                    int contrast = contrastBar.getProgress();
+                    int color = outlineColors[colorSpinner.getSelectedItemPosition()];
+                    boolean gray = grayBackgroundCheck.isChecked();
+                    new Thread(() -> applyOutline(outlineSource, radius, contrast, color,
+                                    gray, true, exportContext, outlineDialog, progressBar,
+                                    detailBar, contrastBar, colorSpinner, grayBackgroundCheck),
+                            "FloatPicture-outline-export").start();
+                };
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                        && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                        && ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    setOutlineDialogEnabled(outlineDialog, detailBar, contrastBar,
+                            colorSpinner, grayBackgroundCheck, false);
+                    pendingOutlineExport = export;
+                    cancelOutlineExport = () -> {
+                        if (outlineDialog.isShowing()) setOutlineDialogEnabled(outlineDialog,
+                                detailBar, contrastBar, colorSpinner, grayBackgroundCheck, true);
+                    };
+                    outlineStoragePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                } else {
+                    export.run();
+                }
+            });
             outlineDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(button -> {
-                if (savedOutlineSource == null) return;
+                Bitmap original = savedOutlineSource != null ? savedOutlineSource
+                        : ImageMethods.getOutlineSourceBitmap(PictureId);
+                if (original == null) return;
                 outlinePreviewGeneration.incrementAndGet();
                 setOutlineDialogEnabled(outlineDialog, detailBar, contrastBar,
                         colorSpinner, grayBackgroundCheck, false);
                 progressBar.setVisibility(View.VISIBLE);
-                new Thread(() -> removeOutline(savedOutlineSource, outlineDialog, progressBar,
+                new Thread(() -> removeOutline(original, outlineDialog, progressBar,
                                 detailBar, contrastBar, colorSpinner, grayBackgroundCheck),
                         "FloatPicture-outline-remove").start();
             });
@@ -637,6 +732,7 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         contrastBar.setEnabled(enabled);
         colorSpinner.setEnabled(enabled);
         grayBackgroundCheck.setEnabled(enabled);
+        owner.findViewById(R.id.button_outline_export).setEnabled(enabled);
         owner.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(enabled);
         owner.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(enabled);
         owner.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(
@@ -678,7 +774,7 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void applyOutline(Bitmap source, int radius, int contrast, int outlineColor,
-                              boolean keepGrayBackground,
+                              boolean keepGrayBackground, boolean exportToGallery, Context context,
                               AlertDialog owner, ProgressBar progressBar,
                               SeekBar detailBar, SeekBar contrastBar, Spinner colorSpinner,
                               CheckBox grayBackgroundCheck) {
@@ -687,12 +783,31 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                 ? ImageMethods.createOutline(
                         source, radius, contrast, outlineColor, keepGrayBackground)
                 : null;
-        int quality = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        int quality = PreferenceManager.getDefaultSharedPreferences(context)
                 .getInt(Config.PREFERENCE_NEW_PICTURE_QUALITY, 80);
         boolean saved = result != null && IOMethods.replaceBitmap(
                 result,
                 quality,
                 Config.DEFAULT_PICTURE_DIR + PictureId);
+
+        // Remember only successfully applied settings. New imports retain them in
+        // the editor until saveAllData adds the picture to the library.
+        if (saved) {
+            outlineRadius = radius;
+            outlineContrast = contrast;
+            this.outlineColor = outlineColor;
+            outlineGrayBackground = keepGrayBackground;
+            if (Edit_Mode || pictureSaved) {
+                PictureData savedData = new PictureData();
+                savedData.setDataControl(PictureId);
+                writeOutlineSettings(savedData);
+                savedData.commit(null);
+            }
+        }
+
+        // Export the newly generated full-resolution bitmap, never the preview
+        // or a previously applied/compressed image.
+        boolean exported = saved && exportToGallery && GalleryExporter.savePng(context, result);
 
         if (!isAdded()) {
             if (result != null && !result.isRecycled()) result.recycle();
@@ -721,13 +836,22 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
                         bitmap, zoom_x, zoom_y, picture_degree);
             }
             floatImageView.setAlpha(picture_alpha);
-            if (previous != null && previous != bitmap && !previous.isRecycled()) {
+            if (previous != null && previous != bitmap && previous != source && !previous.isRecycled()) {
                 previous.recycle();
             }
-            owner.dismiss();
-            Toast.makeText(requireContext(),
-                    R.string.settings_picture_outline_success,
-                    Toast.LENGTH_SHORT).show();
+            if (exportToGallery && !exported) {
+                progressBar.setVisibility(View.GONE);
+                setOutlineDialogEnabled(owner, detailBar, contrastBar,
+                        colorSpinner, grayBackgroundCheck, true);
+                Toast.makeText(requireContext(), R.string.settings_picture_outline_export_failed,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                owner.dismiss();
+                Toast.makeText(requireContext(), exportToGallery
+                                ? R.string.settings_picture_outline_export_success
+                                : R.string.settings_picture_outline_success,
+                        Toast.LENGTH_LONG).show();
+            }
         });
     }
 
@@ -1327,17 +1451,19 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         TextView name = mView.findViewById(R.id.textview_set_size);
         name.setText(R.string.degree);
         final SeekBar seekBar = mView.findViewById(R.id.seekbar_set_size);
-        seekBar.setMax(8);
-        seekBar.setProgress((int) (picture_degree / 45));
+        // Progress 0..16 maps to -360..360 degrees, with zero at the center.
+        seekBar.setMax(16);
+        seekBar.setProgress(Math.max(0, Math.min(16,
+                Math.round(picture_degree / 45f) + 8)));
         final EditText editText = mView.findViewById(R.id.edittext_set_size);
+        configureDecimalInput(editText);
         editText.setText(formatDegree(picture_degree));
         picture_degree_temp = picture_degree;
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    // 核心修改：每个进度代表 45 度
-                    picture_degree_temp = progress * 45;
+                    picture_degree_temp = (progress - 8) * 45f;
 
                     editText.setText(formatDegree(picture_degree_temp));
 
@@ -1399,14 +1525,14 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
             String input;
             input = v.getText().toString().trim();
             if (input.isEmpty()) return;
-            float inputVal = Float.parseFloat(input);
+            float inputVal = parseDecimalInput(input);
 
-            if (inputVal < 0) inputVal = 0;
+            if (inputVal < -360) inputVal = -360;
             if (inputVal > 360) inputVal = 360;
             inputVal = Math.round(inputVal * 100f) / 100f;
 
             picture_degree_temp = inputVal;
-            int nearestProgress = Math.round(inputVal / 45f);
+            int nearestProgress = Math.round(inputVal / 45f) + 8;
             seekBar.setProgress(nearestProgress);
 
             // 手动输入和保存统一保留到 0.01 度。
@@ -1813,6 +1939,13 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         }
     }
 
+    private void writeOutlineSettings(PictureData data) {
+        data.put(Config.DATA_PICTURE_OUTLINE_RADIUS, outlineRadius);
+        data.put(Config.DATA_PICTURE_OUTLINE_CONTRAST, outlineContrast);
+        data.put(Config.DATA_PICTURE_OUTLINE_COLOR, outlineColor);
+        data.put(Config.DATA_PICTURE_OUTLINE_GRAY_BACKGROUND, outlineGrayBackground);
+    }
+
     public boolean saveAllData() {
         if (loadingPicture || editorClosed || floatImageView == null) return false;
         // Another editor action such as "save as copy" may have written a new
@@ -1829,6 +1962,7 @@ public class PictureSettingsFragment extends PreferenceFragmentCompat {
         pictureData.put(Config.DATA_PICTURE_POSITION_Y, position_y);
         pictureData.put(Config.DATA_PICTURE_DEGREE, picture_degree);
         pictureData.put(Config.DATA_ALLOW_PICTURE_OVER_LAYOUT, allow_picture_over_layout);
+        writeOutlineSettings(pictureData);
         pictureData.commit(PictureName);
         boolean global_touchable = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(Config.PREFERENCE_TOUCHABLE_POSITION_EDIT, false);
         boolean global_rotatable = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(Config.PREFERENCE_PINCH_ROTATION, false);

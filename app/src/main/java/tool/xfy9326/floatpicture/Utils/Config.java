@@ -32,6 +32,10 @@ public class Config {
     public final static String DATA_PICTURE_DEFAULT_ZOOM = "DEFAULT_ZOOM";
     public final static String DATA_PICTURE_ALPHA = "ALPHA";
     public final static String DATA_PICTURE_DEGREE = "DEGREE";
+    public final static String DATA_PICTURE_OUTLINE_RADIUS = "OUTLINE_RADIUS";
+    public final static String DATA_PICTURE_OUTLINE_CONTRAST = "OUTLINE_CONTRAST";
+    public final static String DATA_PICTURE_OUTLINE_COLOR = "OUTLINE_COLOR";
+    public final static String DATA_PICTURE_OUTLINE_GRAY_BACKGROUND = "OUTLINE_GRAY_BACKGROUND";
     public final static String DATA_ALLOW_PICTURE_OVER_LAYOUT = "ALLOW_PICTURE_OVER_LAYOUT";
 
     public final static boolean DATA_DEFAULT_PICTURE_SHOW_ENABLED = true;

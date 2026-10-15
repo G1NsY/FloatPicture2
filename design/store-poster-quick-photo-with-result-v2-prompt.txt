@@ -1,0 +1,20 @@
+状态：待用户确认
+工具：内置 imagegen
+编辑底图：C:/Users/AAA/AppData/Local/Temp/codex-clipboard-38f3d788-2996-44de-a6b7-ff51c982d8a9.png
+截图参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图6.jpg
+成片参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/ChatGPT 图像 2026年10月14日 15_53_08.png
+修改：手机框及截图放大；成片卡缩小并与手机框少量叠放；删除“成片”字样。
+保留：摄影师、标题、副标题、品牌、蓝白背景。
+结果：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/成品宣传图/快速出片-线稿对照与成片-v2.png
+工作区副本：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-quick-photo-with-result-v2.png
+检查：成片卡缩小，删除“成片”标签，手机放大；两者右下方轻微叠放；原标题及摄影师保留。生成式编辑不保证源图逐像素一致。
+
+Use case: precise-object-edit / compositing.
+EDIT TARGET is Image 1, the existing completed vertical 9:16 FloatPicture promotional poster. Make one restrained layout revision to this exact poster.
+Image 2 is the original camera screenshot inside the phone, to preserve as the phone is enlarged: same pink-dress woman, grass park, bright cyan line-art overlay, all black camera UI bars, icons, shutter controls and Chinese labels. Image 3 is the exact clean finished photo already shown in the small result print.
+Requested three changes:
+(1) Enlarge the entire dark navy phone frame and its complete screen content by about 15–20% in visual area/scale (roughly from 370 pixels wide to 420–440 pixels wide on a 941-pixel-wide poster). Keep the phone front-facing and vertical, on the RIGHT below the brand line; it should now be the clear main visual. Uniformly scale Image 2 inside it, no crop, repaint, distortion or invented UI. Keep the cyan line art overlaid on the photographed woman visible. Preserve the entire phone, including top controls and bottom camera mode labels, shutter button and icons. Do not cover the woman's face, hand or shutter.
+(2) Shrink the separate clean-photo card at lower right to about 70–75% of its current width/area, while preserving Image 3's original orientation, photographic content and slender white border. The clean photo becomes a supporting result, and the complete raised hand, smiling face and pink dress remain visible. Move this smaller card slightly up and to the right so it overlaps the LOWER RIGHT OUTER EDGE of the enlarged phone frame only a little, like two staggered prints. Keep the photo card fully inside the poster, near the lower right, and keep any overlap off important screenshot content and camera controls. The hierarchy is clearly: large phone/screenshot first, smaller finished photo second. The photo can be only modestly tilted, similar to Image 1.
+(3) Remove the blue rounded label containing the Chinese characters '成片' COMPLETELY. No replacement label or caption. Also do not include those characters anywhere else. The small existing curved arrow may remain if it fits naturally without intersecting the newly arranged cards; do not add a new arrow.
+Preserve everything else from Image 1 as faithfully as possible: headline EXACTLY '快速出片，轻松拍好'; subtitle EXACTLY '有参考，人人都是摄影师'; small FloatPicture brand and underline, typography, colors, locations, blue accent rays, pale blue/cream abstract background, white floating flecks, floor shadow, 9:16 poster crop. Preserve the LEFT anime photographer's identity, expression, black cap, black gloves, olive vest, hanging camera, black pants, shoes, extended pointing hand and entire pose without redrawing or moving him. His pointing fingertips must remain clearly in front of the open space and not disappear behind the enlarged phone. Keep the original natural photograph content of both source images visually faithful.
+Do not add extra people, elements, slogans, logos or watermark. High-quality coherent composition; this is a small revision to the accepted poster, not a redesign.

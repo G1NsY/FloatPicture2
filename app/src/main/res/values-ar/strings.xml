@@ -18,7 +18,7 @@
     <string name="backup_export_failed">فشل النسخ الاحتياطي. لم تتغير بياناتك الحالية. تحقق من المساحة المتاحة وإمكانية الوصول إلى الملفات، وتجنب تحرير الصور أثناء التصدير. لا تلغِ تثبيت التطبيق ولا تستخدم أي ملف نسخة احتياطية غير مكتمل.</string>
     <string name="backup_restore_failed">تعذرت استعادة هذه البيانات. قد تكون غير مكتملة أو تالفة أو غير مدعومة أو غير قابلة للقراءة، أو قد تكون مساحة التخزين ممتلئة. تم الاحتفاظ بمكتبتك السابقة؛ جرّب ملفًا أو مجلدًا آخر.</string>
     <string name="backup_picker_unavailable">تعذر فتح منتقي الملفات. فعّل تطبيق الملفات في النظام وحاول مرة أخرى.</string>
-    <string name="app_name">FloatPicture 2</string>
+    <string name="app_name">FloatPicture</string>
     <string name="done">تم</string>
     <string name="cancel">إلغاء</string>
     <string name="save">حفظ</string>
@@ -96,15 +96,15 @@
     <string name="exit_application">خروج</string>
     <string name="about">حول التطبيق</string>
     <string name="support_development">دعم التطوير</string>
-    <string name="support_heading">دعم FloatPicture 2</string>
-    <string name="support_intro">يتولى G1NsY صيانة التطبيق وتحسينه. شكرًا لجعل FloatPicture 2 جزءًا من سير عملك الإبداعي.</string>
+    <string name="support_heading">دعم FloatPicture</string>
+    <string name="support_intro">يتولى G1NsY صيانة التطبيق وتحسينه. شكرًا لجعل FloatPicture جزءًا من سير عملك الإبداعي.</string>
     <string name="support_alipay_title">الدعم عبر Alipay</string>
-    <string name="support_optional_message">إذا كان FloatPicture 2 مفيدًا لك، فيمكنك دعم استمرار تطويره وصيانته طوعًا. لا تقدم إلا المبلغ الذي يناسبك.\n\nلا يفتح الدعم ميزات إضافية أو محتوى أو خدمات حصرية. تعمل جميع ميزات التطبيق بالطريقة نفسها سواء ساهمت أم لا.</string>
+    <string name="support_optional_message">إذا كان FloatPicture مفيدًا لك، فيمكنك دعم استمرار تطويره وصيانته طوعًا. لا تقدم إلا المبلغ الذي يناسبك.\n\nلا يفتح الدعم ميزات إضافية أو محتوى أو خدمات حصرية. تعمل جميع ميزات التطبيق بالطريقة نفسها سواء ساهمت أم لا.</string>
     <string name="support_view_qr">عرض صورة رمز QR كاملة</string>
     <string name="support_qr_description">رمز QR للتحصيل عبر Alipay يقدمه المطور</string>
     <string name="support_qr_hint">التقط لقطة شاشة، ثم افتح المسح في Alipay واخترها من ألبومك.</string>
     <string name="support_close_qr">العودة إلى صفحة الدعم</string>
-    <string name="support_payment_note">اعرض الصورة كاملة والتقط لقطة شاشة. افتح المسح في Alipay واختر اللقطة من ألبومك. تحقق من المستلم والمبلغ قبل الدفع. لا يعالج FloatPicture 2 المدفوعات ولا يتلقى بيانات اعتماد الدفع ولا يفتح ميزات بناءً على الدعم.</string>
+    <string name="support_payment_note">اعرض الصورة كاملة والتقط لقطة شاشة. افتح المسح في Alipay واختر اللقطة من ألبومك. تحقق من المستلم والمبلغ قبل الدفع. لا يعالج FloatPicture المدفوعات ولا يتلقى بيانات اعتماد الدفع ولا يفتح ميزات بناءً على الدعم.</string>
     <string name="support_other_ways_title">كل مساهمة مهمة</string>
     <string name="support_other_ways_message">يساعد أيضًا نشر التطبيق لمن يحتاجه ووصف المشكلات بوضوح واقتراح التحسينات على نمو المشروع.\n\nلن تحتاج أبدًا إلى الدفع لاستخدام ميزات التطبيق.</string>
     <string name="support_thanks">شكرًا لتشجيعك ودعمك.</string>
@@ -116,7 +116,7 @@
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="privacy_policy_asset_path">PRIVACY_POLICY_AR.txt</string>
     <string name="privacy_acknowledgement_title">قبل المتابعة</string>
-    <string name="privacy_acknowledgement_message">يعالج FloatPicture 2 الصور التي تختارها على هذا الجهاز فقط. يحتاج إلى إذن الظهور فوق التطبيقات الأخرى لعرض الصور العائمة، وقد يستخدم الإشعارات للوحة التحكم الاختيارية. يُرجى مراجعة سياسة الخصوصية قبل المتابعة.</string>
+    <string name="privacy_acknowledgement_message">يعالج FloatPicture الصور التي تختارها على هذا الجهاز فقط. يحتاج إلى إذن الظهور فوق التطبيقات الأخرى لعرض الصور العائمة، وقد يستخدم الإشعارات للوحة التحكم الاختيارية. يُرجى مراجعة سياسة الخصوصية قبل المتابعة.</string>
     <string name="privacy_agree_and_continue">موافق ومتابعة</string>
     <string name="view_privacy_policy">عرض سياسة الخصوصية</string>
     <string name="copyright">حقوق العمل الأصلي © 2017 XFY9326.\nحقوق التعديلات © 2026 G1NsY.\nمرخّص بموجب GNU GPL v3 أو أي إصدار أحدث.</string>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">تصدير إلى المعرض</string>
+    <string name="settings_picture_outline_export_success">تم تطبيق الرسم وحفظ PNG في ألبوم FloatPicture.</string>
+    <string name="settings_picture_outline_export_failed">تم تطبيق الرسم، لكن التصدير فشل. تحقق من مساحة التخزين وحاول مجددًا.</string>
+    <string name="settings_picture_outline_export_permission">اسمح بالوصول إلى التخزين لتصدير الرسم إلى المعرض.</string>
+</resources>

@@ -15,8 +15,8 @@ android {
         applicationId 'tool.g1nsy.floatpicture'
         minSdkVersion 19
         targetSdkVersion 36
-        versionCode 18
-        versionName '2.0.9.3(Beta)'
+        versionCode 19
+        versionName '2.0.9.4'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         resValue 'bool', 'support_external_enabled', externalSupport
 

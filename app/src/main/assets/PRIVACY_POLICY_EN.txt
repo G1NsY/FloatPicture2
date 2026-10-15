@@ -1,24 +1,28 @@
-FloatPicture 2 Privacy Policy
-Last updated: September 7, 2026
+FloatPicture Privacy Policy
+Last updated: October 14, 2026
 
-FloatPicture 2 is an offline floating-picture utility. It does not require an account and does not include advertising, analytics, or tracking services. The app does not automatically upload your pictures or usage data to a server.
+FloatPicture is an offline floating-picture utility. It does not require an account and does not include advertising, analytics, or tracking services. The app does not automatically upload your pictures or usage data to a server.
 
 Pictures and local data
 You choose pictures through Android's system file picker. Selected pictures and the settings you create are copied to the app's private storage so that floating pictures can continue to work. Other apps cannot normally access this private storage. This data is removed when you uninstall the app. You can also delete individual pictures inside the app.
 
 Permissions
+Storage (Android 9 and earlier only): write access is requested only when you export line art to the gallery.
 Display over other apps: used only to show the floating pictures you request above other apps.
 Notifications: used to display the optional persistent control panel for the floating-picture foreground service.
 Foreground service: used to keep user-requested floating pictures and their visible controls available while you use other apps.
 
 Data sharing and retention
-FloatPicture 2 does not sell personal data or automatically share it with external services. Local pictures and settings remain in app storage until you delete them or uninstall the app.
+FloatPicture does not sell personal data or automatically share it with external services. Local pictures and settings remain in app storage until you delete them or uninstall the app.
 
 User-selected backups
 You can export pictures and saved editing parameters through the Android system file picker. Backups are not encrypted by this app. Files saved outside app-specific storage remain after uninstalling until you delete them yourself. If you select a cloud drive or another document provider, that provider stores or transfers the backup under its own terms and privacy policy. Import reads only the file or folder you select and replaces your current library only after your confirmation.
 
+Exporting line art to the gallery
+Export first applies the current line-art settings, then saves a PNG in Pictures/FloatPicture. Exported pictures are visible in your local gallery and may be read by other apps with the appropriate access. They remain after uninstalling FloatPicture or deleting the picture inside the app; you can delete them separately in your gallery.
+
 External pages and optional support
-Some distribution versions display a developer-provided Alipay collection QR image for optional support. The image is bundled with the app and is displayed locally, including in the full-image viewer. The support page does not launch a payment app, read or write the clipboard, or send pictures, picture settings or account information. You may choose to take a screenshot and scan it separately in Alipay. Alipay processes payment information under its own privacy policy and terms. FloatPicture 2 does not process payments, receive payment credentials or unlock app features based on payments. Other external pages, such as the project website, are subject to their own privacy policies.
+Some distribution versions display a developer-provided Alipay collection QR image for optional support. The image is bundled with the app and is displayed locally, including in the full-image viewer. The support page does not launch a payment app, read or write the clipboard, or send pictures, picture settings or account information. You may choose to take a screenshot and scan it separately in Alipay. Alipay processes payment information under its own privacy policy and terms. FloatPicture does not process payments, receive payment credentials or unlock app features based on payments. Other external pages, such as the project website, are subject to their own privacy policies.
 
 Contact
 For privacy questions or support, email: nimedea@gmail.com

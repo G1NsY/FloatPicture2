@@ -60,7 +60,7 @@
             android:id="@+id/check_outline_gray_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:text="@string/settings_picture_outline_keep_gray_background" />
 
         <TextView
@@ -86,6 +86,13 @@
             android:layout_height="wrap_content"
             android:max="100"
             android:progress="65" />
+
+        <Button
+            android:id="@+id/button_outline_export"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/settings_picture_outline_export" />
 
     </LinearLayout>
 

@@ -1,0 +1,21 @@
+状态：待用户确认
+工具：内置 imagegen
+构图与配色参考：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-import-boy-v1.png
+本轮文字：用户已确认；第四张采用最后修改的“快速出片，轻松拍好 / 有参考，人人都是摄影师”。
+参考输入（顺序与生成提示一致）：
+C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-import-boy-v1.png
+E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图4.jpg
+E:/AndroidAPP/FloatPicture2相关材料/动画/男生_自然暖肤色_手臂修正版.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/reference.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/style-female.png
+结果：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-multi-boy-v1.png
+检查：文案正确；白衣男主半身点赞；右侧展示四张悬浮参考；沿用系列构图和配色。截图为生成式合成，不能保证逐像素保留。
+材料目录副本：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/宣传图2-多图同时悬浮-白衣男主-v1.png
+
+Use case: ads-marketing / compositing. Generate exactly ONE finished vertical 9:16 app promotional poster, a matching sibling in this FloatPicture series. Image 1 is the confirmed design template: preserve its vertical canvas proportion, pale powder-blue and warm ivory gradient, flowing large pale-blue graphic shapes, restrained white flecks, navy bold sans-serif Chinese headline in the top area, quieter blue subtitle beneath it, short divider and small FloatPicture brand below, and sharp flat screenshot with a thin dark-blue rounded edge. Do not use the previous poster's headline, subtitle or screenshot content. Make exact correct Chinese lettering, generous margins, no logos or watermark, no new slogans or feature lists. The supplied screenshot is an existing raster visual to place faithfully with uniform scaling; do not invent UI, new app elements, extra photo thumbnails or altered labels. Keep its original aspect ratio and all important contents visible. Only the screenshot's existing UI text and the specified three poster text lines are allowed. Screenshot must remain legible and dominate the product demonstration. Keep the series clean, warm and professional.
+Image 2 is the exact NEW screenshot: camera app showing a real green grass park with FOUR separate rectangular portrait reference photographs simultaneously floating over it in two loosely staggered columns, complete black camera top and bottom controls. Use this screenshot as given, preserve exactly four pictures, their placement and photo contents, no cyan line art, no new interface. Image 3 is only the male character's identity and outfit reference: same tousled short black hair, recognizable face, warm natural skin and plain white crew-neck short-sleeve T-shirt. Images 4 and 5 are equal-authority character drawing STYLE references ONLY: delicate clean 2D hand-drawn anime contours, controlled flat colors and cel shadows. Do not borrow sunset lighting, backgrounds, frightened expressions, sweat, phone props or female clothing.
+On the LEFT, replace the full-body thoughtful boy with a large friendly HALF-BODY PORTRAIT of this same white-shirt boy from roughly the waist up. One hand is raised in a clear THUMBS-UP near his chest/shoulder: one thumb straight upward, the four other fingers folded naturally with proper knuckles, believable wrist, no extra digits. Natural confident smile, welcoming expression, turned very slightly towards the screenshot on the right. No frown or chin-rest gesture, no cap or vest. Keep a clean half-body crop with the lower torso ending at the poster's bottom or a gently masked background edge, no chopped hands. His face and thumb are readable. Use the left column for the mascot, with the screenshot on the RIGHT positioned and sized similarly to the template. Leave clear space under the header, no mascot covering the four reference pictures or camera shutter. Minimal overlap of the screenshot frame edge only.
+Exact headline: "多张参考，同时悬浮"
+Exact subtitle: "边拍边对照，无需反复切换"
+Exact brand: "FloatPicture"
+Headline may be slightly smaller to stay on a single line within the existing side margins, maintaining the template's bold hierarchy. Only one white-shirt boy outside the screen.

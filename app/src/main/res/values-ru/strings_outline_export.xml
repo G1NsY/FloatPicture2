@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">Экспорт в галерею</string>
+    <string name="settings_picture_outline_export_success">Контур применён, PNG сохранён в альбом FloatPicture.</string>
+    <string name="settings_picture_outline_export_failed">Контур применён, но экспорт не удался. Проверьте свободное место и повторите попытку.</string>
+    <string name="settings_picture_outline_export_permission">Разрешите доступ к хранилищу для экспорта контура в галерею.</string>
+</resources>

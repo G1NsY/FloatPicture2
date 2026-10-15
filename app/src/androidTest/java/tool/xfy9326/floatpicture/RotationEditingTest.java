@@ -2,12 +2,15 @@ package tool.xfy9326.floatpicture;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.widget.EditText;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
@@ -22,9 +25,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.FileInputStream;
+import java.io.File;
 import java.lang.reflect.Field;
 
 import tool.xfy9326.floatpicture.Activities.PictureSettingsActivity;
+import tool.xfy9326.floatpicture.MainApplication;
+import tool.xfy9326.floatpicture.Methods.BackupArchive;
 import tool.xfy9326.floatpicture.Methods.IOMethods;
 import tool.xfy9326.floatpicture.Methods.ImageMethods;
 import tool.xfy9326.floatpicture.Methods.ManageMethods;
@@ -45,13 +51,20 @@ public class RotationEditingTest {
     private PictureSettingsActivity activity;
     private PictureSettingsFragment fragment;
     private boolean fixtureCreated;
+    private File testDirectory;
 
     @Before
     public void setUp() throws Exception {
         instrumentation = InstrumentationRegistry.getInstrumentation();
         context = instrumentation.getTargetContext();
-        // Never run global visibility changes against a device containing user pictures.
-        assumeTrue("Use an empty test installation", new PictureData().getListArray().isEmpty());
+        assumeTrue("Run without loaded user windows",
+                ((MainApplication) context.getApplicationContext()).getRegister().isEmpty());
+        testDirectory = File.createTempFile("rotation-edit-", ".tmp", context.getCacheDir());
+        assertTrue(testDirectory.delete());
+        assertTrue(testDirectory.mkdir());
+        Config.initialize(new ContextWrapper(context) {
+            @Override public File getFilesDir() { return testDirectory; }
+        });
         try (ParcelFileDescriptor result = instrumentation.getUiAutomation()
                 .executeShellCommand("appops set " + context.getPackageName()
                         + " SYSTEM_ALERT_WINDOW allow");
@@ -172,6 +185,64 @@ public class RotationEditingTest {
     }
 
     @Test
+    public void negativeAngleCanBeEnteredSavedAndReopened() {
+        AlertDialog dialog = openAngle();
+        instrumentation.runOnMainSync(() -> {
+            EditText input = dialog.findViewById(R.id.edittext_set_size);
+            input.setText("-123.45");
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        });
+        instrumentation.waitForIdleSync();
+        assertFalse(dialog.isShowing());
+        instrumentation.runOnMainSync(() -> assertTrue(fragment.saveAllData()));
+        PictureData data = new PictureData();
+        data.setDataControl(PICTURE_ID);
+        assertEquals(-123.45f, data.getFloat(Config.DATA_PICTURE_DEGREE, 0f), 0.001f);
+        assertEquals(236.55f, ImageMethods.getFloatImageViewById(context, PICTURE_ID)
+                .getCurrentDegree(), 0.02f);
+
+        closeEditor();
+        instrumentation.runOnMainSync(() -> ManageMethods.prepareWindowForEditing(context, PICTURE_ID));
+        instrumentation.waitForIdleSync();
+        openEditor();
+        AlertDialog reopened = openAngle();
+        instrumentation.runOnMainSync(() -> {
+            EditText input = reopened.findViewById(R.id.edittext_set_size);
+            assertEquals("-123.45", input.getText().toString());
+            assertEquals(5, ((SeekBar) reopened.findViewById(R.id.seekbar_set_size)).getProgress());
+            reopened.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+        });
+    }
+
+    @Test
+    public void sliderCanRotateCounterclockwiseAndCancelRestoresPreviousAngle() {
+        AlertDialog dialog = openAngle();
+        instrumentation.runOnMainSync(() -> {
+            SeekBar slider = dialog.findViewById(R.id.seekbar_set_size);
+            EditText input = dialog.findViewById(R.id.edittext_set_size);
+            assertEquals(16, slider.getMax());
+            float left = slider.getPaddingLeft();
+            float width = slider.getWidth() - left - slider.getPaddingRight();
+            float x = left + width * 6f / 16f;
+            float y = slider.getHeight() / 2f;
+            long time = SystemClock.uptimeMillis();
+            MotionEvent down = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, x, y, 0);
+            MotionEvent up = MotionEvent.obtain(time, time + 20, MotionEvent.ACTION_UP, x, y, 0);
+            slider.dispatchTouchEvent(down);
+            slider.dispatchTouchEvent(up);
+            down.recycle();
+            up.recycle();
+            assertEquals("-90.00", input.getText().toString());
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+        });
+        instrumentation.waitForIdleSync();
+        assertFalse(dialog.isShowing());
+        instrumentation.runOnMainSync(() -> assertEquals(37.25f,
+                ImageMethods.getFloatImageViewById(context, PICTURE_ID)
+                        .getCurrentDegree(), 0.02f));
+    }
+
+    @Test
     public void allPictureControlsCanConfirmAndCancelInSinglePictureMode() {
         exercisePictureControls();
     }
@@ -248,12 +319,19 @@ public class RotationEditingTest {
 
     @After
     public void tearDown() {
-        if (instrumentation == null || !fixtureCreated) return;
-        instrumentation.runOnMainSync(() -> {
-            if (fragment != null) fragment.clearEditView();
-            if (activity != null) activity.finish();
-        });
-        instrumentation.waitForIdleSync();
-        instrumentation.runOnMainSync(() -> ManageMethods.DeleteWin(context, PICTURE_ID));
+        if (instrumentation == null) return;
+        if (fixtureCreated) {
+            instrumentation.runOnMainSync(() -> {
+                if (fragment != null) fragment.clearEditView();
+                if (activity != null) activity.finish();
+            });
+            instrumentation.waitForIdleSync();
+            instrumentation.runOnMainSync(() -> ManageMethods.DeleteWin(context, PICTURE_ID));
+        }
+        if (testDirectory != null) {
+            instrumentation.runOnMainSync(() -> ManageMethods.prepareForDataReload(context));
+            Config.initialize(context);
+            BackupArchive.deleteTree(testDirectory);
+        }
     }
 }

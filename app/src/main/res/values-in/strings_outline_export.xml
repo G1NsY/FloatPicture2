@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">Ekspor ke galeri</string>
+    <string name="settings_picture_outline_export_success">Gambar garis diterapkan dan PNG disimpan ke album FloatPicture.</string>
+    <string name="settings_picture_outline_export_failed">Gambar garis diterapkan, tetapi ekspor gagal. Periksa ruang penyimpanan dan coba lagi.</string>
+    <string name="settings_picture_outline_export_permission">Izinkan akses penyimpanan untuk mengekspor gambar garis ke galeri.</string>
+</resources>

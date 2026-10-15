@@ -56,7 +56,7 @@ public class AboutLayoutTest {
                     assertEquals(orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                                     ? Configuration.ORIENTATION_LANDSCAPE : Configuration.ORIENTATION_PORTRAIT,
                             activity.getResources().getConfiguration().orientation);
-                    assertEquals(language.equals("zh") ? "悬浮图片2" : "FloatPicture 2",
+                    assertEquals(language.equals("zh") ? "悬浮图片" : "FloatPicture",
                             activity.getString(R.string.app_name));
                     assertNotNull(activity.findViewById(R.id.layout_about_toolbar_container));
                     View content = activity.findViewById(R.id.layout_about_content);

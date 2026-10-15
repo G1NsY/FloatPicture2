@@ -1,0 +1,27 @@
+状态：待用户确认
+工具：内置 imagegen
+构图底图：design/store-poster-girl-pose-v2.png（用户明确采用其比例与构图）
+截图参考：C:/Users/AAA/AppData/Roaming/Tencent/QQ/Temp/c767fb312c69ef1098576122632c5e69.jpg
+人物参考：E:/AndroidAPP/FloatPicture2相关材料/动画/男生_自然暖肤色_手臂修正版.png
+固定画风参考：动画角色改图技能 assets/reference.png 和 assets/style-female.png
+变化项：白衣男主轻皱眉、托腮思考；替换右侧截图；更新导入文案。
+已确认保留项：前张竖版比例与构图，浅蓝米白背景，标题层级和品牌位置。
+结果：design/store-poster-import-boy-v1.png
+材料目录副本：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/宣传图-轻松导入-白衣男主-v1.png
+检查：沿用竖版比例与左右构图；白衣男主托腮思考，眉间表情较轻；标题与副标题正确。截图为生成式合成，未保证逐像素保留原图。
+
+Use case: ads-marketing / compositing.
+Create ONE finished vertical 9:16 FloatPicture app promotional poster as the next image in the exact visual series of reference image 1.
+Reference image roles:
+Image 1 is the COMPOSITION AND GRAPHIC DESIGN base. Preserve the same vertical canvas, proportions, margins, pale powder-blue and ivory gradient background, large organic blue shapes, restrained white decorative flecks, ground shadow, clean dark navy headline, quieter blue subtitle, small FloatPicture brand, and the large thin-dark-edge rounded screenshot card on the RIGHT. Keep this card's position, height, width and front-facing flat orientation as close as possible to image 1. Change only the poster copy, screenshot content, and the left mascot to the requested new male character.
+Image 2 is the EXACT NEW SCREENSHOT to insert inside the right-hand frame. Faithfully use the existing screenshot visually rather than redesigning its UI. It depicts 图片设置 in a blue top bar with back and save icons, Chinese settings labels, a translucent four-image reference collage, and the small round FloatPicture control near lower right. Preserve its contents, original wording, relative positions, colors, transparency and the source aspect ratio; only scale uniformly to fit. Keep it sharp and legible, no fictional interface, no replacement text or invented UI. No camera scene or cyan outlines from image 1 should remain. Source screenshot UI text is the only extra text permitted apart from the poster copy below.
+Image 3 is ONLY the MALE CHARACTER IDENTITY, body proportions and outfit reference, not its four-view layout or standing pose. Use ONE male protagonist with recognizable tousled spiky short black hair, the reference face, warm natural skin, plain white crew-neck short-sleeve T-shirt, blue straight jeans and white lace-up sneakers. No cap, camera, vest or gloves. No model-sheet white background, guides or labels.
+Images 4 and 5 are EQUAL-AUTHORITY CHARACTER DRAWING STYLE references only. Use traditional 2D hand-drawn anime with delicate contour lines, restrained interior lines, flat colors and clean cel-shaded shapes. Do not borrow their sunset, background scenery, photographic rendering, boy's exaggerated frightened face, sweat drops, held phone or girl's clothing.
+Requested mascot change: replace the girl outside the screenshot with this full-body white-shirt boy in a slightly furrowed-brow THINKING pose. Eyebrows gently knit, attentive eyes, mouth quietly closed, thoughtful rather than angry or distressed. Head turned slightly toward the screenshot on his right. One hand naturally rests under his chin with index finger near the chin; the opposite arm rests across his torso to support that elbow. Plausible fingers, wrists and joints. Relaxed balanced standing legs, slight shift of weight, both sneakers visible. Preserve this male character's face shape, hair, body build and clothes. Warm youthful anime expression. Make his face large enough for thoughtful brows to read, with a similar character-to-screenshot visual weight as the previous poster.
+Layout consistency: header remains in the same top region; male figure on the LEFT in the lower main area, feet near the previous mascot's baseline; screenshot card on the RIGHT, dominant and readable. Mascot may overlap the card's lower-left border minimally, never obscure main setting labels. Keep a clear silhouette and no busy outside scenery. Full figure fits inside canvas.
+EXACT poster wording, ONLY these three lines:
+Headline: "参考图，轻松导入"
+Subtitle: "选好图片，开始创作"
+Brand: "FloatPicture"
+Headline one line, adjust font size just enough to fit comfortably within existing margins while retaining the same bold dark navy sans-serif typeface and hierarchy. Subtitle and brand same font/color/alignment hierarchy as image 1. Correct Chinese punctuation, no duplicate headline, no additional explanation, feature lists, badges, store logos, watermark or call to action.
+The output must look like a matching sibling of the previous poster, with the same professional airy blue-and-cream visual design, a thoughtful white-shirt male on the left and the supplied imported-reference settings screenshot on the right.

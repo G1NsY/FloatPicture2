@@ -18,7 +18,7 @@
     <string name="backup_export_failed">No se pudo crear la copia. Tus datos no han cambiado. Comprueba el espacio y el acceso a archivos, y no edites imágenes durante la exportación. No desinstales la aplicación ni uses una copia incompleta.</string>
     <string name="backup_restore_failed">No se pudieron restaurar los datos. Pueden estar incompletos, dañados, no ser compatibles o legibles, o puede faltar espacio. La biblioteca anterior se ha conservado; prueba otro archivo o carpeta.</string>
     <string name="backup_picker_unavailable">No se puede abrir el selector de archivos. Activa la aplicación Archivos del sistema e inténtalo de nuevo.</string>
-    <string name="app_name">FloatPicture 2</string>
+    <string name="app_name">FloatPicture</string>
     <string name="done">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="save">Guardar</string>
@@ -91,15 +91,15 @@
     <string name="exit_application">Salir</string>
     <string name="about">Acerca de</string>
     <string name="support_development">Apoyar el desarrollo</string>
-    <string name="support_heading">Apoya FloatPicture 2</string>
-    <string name="support_intro">Mantenida y mejorada por G1NsY. Gracias por integrar FloatPicture 2 en tu flujo creativo.</string>
+    <string name="support_heading">Apoya FloatPicture</string>
+    <string name="support_intro">Mantenida y mejorada por G1NsY. Gracias por integrar FloatPicture en tu flujo creativo.</string>
     <string name="support_alipay_title">Apoyar mediante Alipay</string>
-    <string name="support_optional_message">Si FloatPicture 2 te resulta útil, puedes apoyar voluntariamente su desarrollo y mantenimiento. Aporta solo lo que te resulte cómodo.\n\nEl apoyo no desbloquea funciones, contenido ni servicios exclusivos. Todas las funciones son iguales contribuyas o no.</string>
+    <string name="support_optional_message">Si FloatPicture te resulta útil, puedes apoyar voluntariamente su desarrollo y mantenimiento. Aporta solo lo que te resulte cómodo.\n\nEl apoyo no desbloquea funciones, contenido ni servicios exclusivos. Todas las funciones son iguales contribuyas o no.</string>
     <string name="support_view_qr">Ver imagen QR completa</string>
     <string name="support_qr_description">Código QR de cobro de Alipay proporcionado por el desarrollador</string>
     <string name="support_qr_hint">Haz una captura; abre Escanear en Alipay y selecciónala del álbum.</string>
     <string name="support_close_qr">Volver a la página de apoyo</string>
-    <string name="support_payment_note">Abre la imagen completa y haz una captura. En Alipay, abre Escanear y elige la captura. Comprueba destinatario e importe antes de pagar. FloatPicture 2 no procesa pagos, recibe credenciales ni desbloquea funciones por el apoyo.</string>
+    <string name="support_payment_note">Abre la imagen completa y haz una captura. En Alipay, abre Escanear y elige la captura. Comprueba destinatario e importe antes de pagar. FloatPicture no procesa pagos, recibe credenciales ni desbloquea funciones por el apoyo.</string>
     <string name="support_other_ways_title">Cada aportación cuenta</string>
     <string name="support_other_ways_message">Compartir la aplicación, describir claramente los problemas y sugerir mejoras también ayuda al proyecto.\n\nNunca necesitas pagar para usar sus funciones.</string>
     <string name="support_thanks">Gracias por tu ánimo y apoyo.</string>
@@ -110,7 +110,7 @@
     <string name="privacy_policy">Política de privacidad</string>
     <string name="privacy_policy_asset_path">PRIVACY_POLICY_ES.txt</string>
     <string name="privacy_acknowledgement_title">Antes de continuar</string>
-    <string name="privacy_acknowledgement_message">FloatPicture 2 procesa únicamente en este dispositivo las imágenes que eliges. Necesita permiso de superposición y puede usar notificaciones para el panel opcional. Revisa la política de privacidad antes de continuar.</string>
+    <string name="privacy_acknowledgement_message">FloatPicture procesa únicamente en este dispositivo las imágenes que eliges. Necesita permiso de superposición y puede usar notificaciones para el panel opcional. Revisa la política de privacidad antes de continuar.</string>
     <string name="privacy_agree_and_continue">Aceptar y continuar</string>
     <string name="view_privacy_policy">Ver política de privacidad</string>
     <string name="copyright">Obra original Copyright © 2017 XFY9326.\nModificaciones Copyright © 2026 G1NsY.\nLicencia GNU GPL v3 o posterior.</string>

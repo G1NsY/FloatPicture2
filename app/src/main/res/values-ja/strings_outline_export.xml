@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">ギャラリーに書き出す</string>
+    <string name="settings_picture_outline_export_success">線画を適用し、PNG を FloatPicture アルバムに保存しました。</string>
+    <string name="settings_picture_outline_export_failed">線画は適用されましたが、書き出しに失敗しました。空き容量を確認して再試行してください。</string>
+    <string name="settings_picture_outline_export_permission">線画をギャラリーに書き出すには、ストレージへのアクセスを許可してください。</string>
+</resources>

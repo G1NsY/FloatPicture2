@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_picture_outline_export">导出到相册</string>
+    <string name="settings_picture_outline_export_success">已应用线稿并将 PNG 保存到 FloatPicture 相册</string>
+    <string name="settings_picture_outline_export_failed">线稿已应用，但导出失败。请检查存储空间后重试。</string>
+    <string name="settings_picture_outline_export_permission">请允许存储权限，以将线稿导出到本地相册。</string>
+</resources>

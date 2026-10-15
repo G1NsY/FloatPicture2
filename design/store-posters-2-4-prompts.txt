@@ -1,0 +1,63 @@
+FloatPicture 商店宣传图2—4
+状态：待用户确认
+工具：内置 imagegen
+共同要求：沿用前图的竖版比例、浅蓝米白配色与标题层级；按用户最终确认的文案生成。
+截图通过生成式合成，不保证逐像素保留。
+
+宣传图2-多图同时悬浮-白衣男主-v1.png
+工作区文件：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-multi-boy-v1.png
+参考输入：
+C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-import-boy-v1.png
+E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图4.jpg
+E:/AndroidAPP/FloatPicture2相关材料/动画/男生_自然暖肤色_手臂修正版.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/reference.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/style-female.png
+
+实际使用的生成提示词：
+Use case: ads-marketing / compositing. Generate exactly ONE finished vertical 9:16 app promotional poster, a matching sibling in this FloatPicture series. Image 1 is the confirmed design template: preserve its vertical canvas proportion, pale powder-blue and warm ivory gradient, flowing large pale-blue graphic shapes, restrained white flecks, navy bold sans-serif Chinese headline in the top area, quieter blue subtitle beneath it, short divider and small FloatPicture brand below, and sharp flat screenshot with a thin dark-blue rounded edge. Do not use the previous poster's headline, subtitle or screenshot content. Make exact correct Chinese lettering, generous margins, no logos or watermark, no new slogans or feature lists. The supplied screenshot is an existing raster visual to place faithfully with uniform scaling; do not invent UI, new app elements, extra photo thumbnails or altered labels. Keep its original aspect ratio and all important contents visible. Only the screenshot's existing UI text and the specified three poster text lines are allowed. Screenshot must remain legible and dominate the product demonstration. Keep the series clean, warm and professional.
+Image 2 is the exact NEW screenshot: camera app showing a real green grass park with FOUR separate rectangular portrait reference photographs simultaneously floating over it in two loosely staggered columns, complete black camera top and bottom controls. Use this screenshot as given, preserve exactly four pictures, their placement and photo contents, no cyan line art, no new interface. Image 3 is only the male character's identity and outfit reference: same tousled short black hair, recognizable face, warm natural skin and plain white crew-neck short-sleeve T-shirt. Images 4 and 5 are equal-authority character drawing STYLE references ONLY: delicate clean 2D hand-drawn anime contours, controlled flat colors and cel shadows. Do not borrow sunset lighting, backgrounds, frightened expressions, sweat, phone props or female clothing.
+On the LEFT, replace the full-body thoughtful boy with a large friendly HALF-BODY PORTRAIT of this same white-shirt boy from roughly the waist up. One hand is raised in a clear THUMBS-UP near his chest/shoulder: one thumb straight upward, the four other fingers folded naturally with proper knuckles, believable wrist, no extra digits. Natural confident smile, welcoming expression, turned very slightly towards the screenshot on the right. No frown or chin-rest gesture, no cap or vest. Keep a clean half-body crop with the lower torso ending at the poster's bottom or a gently masked background edge, no chopped hands. His face and thumb are readable. Use the left column for the mascot, with the screenshot on the RIGHT positioned and sized similarly to the template. Leave clear space under the header, no mascot covering the four reference pictures or camera shutter. Minimal overlap of the screenshot frame edge only.
+Exact headline: "多张参考，同时悬浮"
+Exact subtitle: "边拍边对照，无需反复切换"
+Exact brand: "FloatPicture"
+Headline may be slightly smaller to stay on a single line within the existing side margins, maintaining the template's bold hierarchy. Only one white-shirt boy outside the screen.
+
+------------------------------
+
+宣传图3-彩色线稿本地生成-全息女神-v1.png
+工作区文件：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-lineart-hologram-v1.png
+参考输入：
+C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-import-boy-v1.png
+E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/cc388d5c2fc050d70c99c45f222d11f1.jpg
+E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/f56cc722-8de1-4be2-9f8b-f043ee6d27cd.png
+
+实际使用的生成提示词：
+Use case: ads-marketing / compositing. Generate exactly ONE finished vertical 9:16 app promotional poster, a matching sibling in this FloatPicture series. Image 1 is the confirmed design template: preserve its vertical canvas proportion, pale powder-blue and warm ivory gradient, flowing large pale-blue graphic shapes, restrained white flecks, navy bold sans-serif Chinese headline in the top area, quieter blue subtitle beneath it, short divider and small FloatPicture brand below, and sharp flat screenshot with a thin dark-blue rounded edge. Do not use the previous poster's headline, subtitle or screenshot content. Make exact correct Chinese lettering, generous margins, no logos or watermark, no new slogans or feature lists. The supplied screenshot is an existing raster visual to place faithfully with uniform scaling; do not invent UI, new app elements, extra photo thumbnails or altered labels. Keep its original aspect ratio and all important contents visible. Only the screenshot's existing UI text and the specified three poster text lines are allowed. Screenshot must remain legible and dominate the product demonstration. Keep the series clean, warm and professional.
+Image 2 is the exact NEW screenshot: FloatPicture image list page with dark blue starry forest header, white title 悬浮图片, a blue + button, and four white cards for 演示图片, 线稿-红色-透明, 线稿-青色-灰底, 线稿-绿色-透明. Preserve the original card order, their thumbnail contents, original UI lettering, gray switches and cyan icons. No camera scene from the template should remain.
+Image 3 is the ONLY identity, rendering and pose reference for a BLUE HOLOGRAPHIC GODDESS peeking around a vertical edge. Preserve her recognizable long flowing hair, anime face, one eye winking, playful expression, luminous electric-cyan contour lines, translucent blue-cyan luminous body, subtle hologram particles, softly modeled holographic clothing. This character intentionally uses the provided glowing holographic appearance rather than the template's matte male style. Do NOT copy image 3 as a rectangular dark-background photograph.
+Remove the template's white-shirt boy completely. Place ONE upper-body blue holographic goddess on the LEFT, emerging from behind the LEFT OUTER EDGE of this poster as if breaking the fourth wall. A narrow tasteful dark-navy folded/peeled edge at the far left may provide depth, but keep the rest of the poster in the same light blue/ivory series design. Her near hand wraps naturally around that vertical poster edge with fingers visible in front, and her head and shoulder lean into the poster's space towards the viewer; preserve her other hand's raised index finger gently in front of her lips and the playful wink from the reference. Her luminous hair and shoulder overlap the foreground to reinforce the dimensional illusion. Face about the same visual size as the template's mascot face; subtle cyan aura, but do not wash out the typography or screenshot. Keep glow crisp against a slightly deeper-blue local accent behind the mascot. Leave headline area unobstructed. Do not place her inside the phone, do not make her an opaque blue plastic 3D toy, do not add any real person or matte anime girl. Screenshot on the RIGHT with same size and placement as template; hologram entirely outside its central UI and thumbnail cards.
+Exact headline: "彩色线稿，本地生成"
+Exact subtitle: "多种颜色可选，图片无需上传"
+Exact brand: "FloatPicture"
+Use the same navy/blue typography and airy series layout as image 1; do not turn the whole poster into a dark sci-fi scene.
+
+------------------------------
+
+宣传图4-快速出片-摄影师男主-v1.png
+工作区文件：C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-quick-photo-photographer-v1.png
+参考输入：
+C:/Users/AAA/Documents/FloatPiture_App优化/design/store-poster-import-boy-v1.png
+E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图3.jpg
+E:/AndroidAPP/FloatPicture2相关材料/动画/图片分镜/摄影师弓步取景-食指朝上修正版-v1.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/reference.png
+C:/Users/AAA/.codex/skills/artifact-template-anime-character-edit/assets/style-female.png
+
+实际使用的生成提示词：
+Use case: ads-marketing / compositing. Generate exactly ONE finished vertical 9:16 app promotional poster, a matching sibling in this FloatPicture series. Image 1 is the confirmed design template: preserve its vertical canvas proportion, pale powder-blue and warm ivory gradient, flowing large pale-blue graphic shapes, restrained white flecks, navy bold sans-serif Chinese headline in the top area, quieter blue subtitle beneath it, short divider and small FloatPicture brand below, and sharp flat screenshot with a thin dark-blue rounded edge. Do not use the previous poster's headline, subtitle or screenshot content. Make exact correct Chinese lettering, generous margins, no logos or watermark, no new slogans or feature lists. The supplied screenshot is an existing raster visual to place faithfully with uniform scaling; do not invent UI, new app elements, extra photo thumbnails or altered labels. Keep its original aspect ratio and all important contents visible. Only the screenshot's existing UI text and the specified three poster text lines are allowed. Screenshot must remain legible and dominate the product demonstration. Keep the series clean, warm and professional.
+For this poster ONLY, adapt the main visual composition to accommodate a wide horizontal full-body action pose. Keep the same header, typography, colors, visual spacing and series style. Place a large upright SCREENSHOT in the upper-middle/right beneath the header, slightly smaller and higher than template, leaving the lower third for the wide full-body photographer. Avoid shrinking the screenshot too far; it remains large, sharp and fully visible. Place the photographer horizontally ACROSS THE LOWER AREA with both complete shoes visible, hands and extended pointing fingertip inside canvas; he may overlap only a small part of the frame's very bottom edge, not the photographed woman's face, raised hand or central camera UI. Do not place the whole original horizontal reference rectangle into the poster.
+Image 2 is the exact NEW screenshot: black camera top and bottom controls around a natural park photograph of a real smiling woman with brown updo and PINK short-sleeve dress, one arm raised upwards, opposite arm extending downwards. Faithfully preserve this provided photograph, original framing, black UI bars and camera labels. NO cyan outline or floating photos, no substituted woman, no invented app UI.
+Image 3 is the EXACT CHARACTER, OUTFIT, PROPS AND BODY-POSE reference for the photographer male, but NOT its golden/orange background or lighting. Match his wide low lunge: the leg on viewer's left bent and grounded; the leg on viewer's right extended far outward with its shoe fully visible. Black cap worn backward/sideways just as reference, short black hair and same face, olive multi-pocket photographer vest over black short-sleeve shirt, black fingerless gloves, black cargo trousers and black sneakers with white soles, camera hanging on neck strap. Hand on viewer's left holds the same dark phone HORIZONTALLY near face/chest; preserve the visible BACK and grip. Arm on viewer's right extends forward with the hand closer to viewer in a clear L-shaped framing gesture: INDEX FINGER points STRAIGHT UP, THUMB extended sideways, other three fingers folded, NOT finger-gun with index horizontal. Preserve orientation and foreshortening. Focused confident expression, balanced dynamic anatomy. Maintain the scene's cool/neutral daytime colors, remove the original golden speed-lines, fire-like bursts, orange background and strong yellow skin cast. Images 4 and 5 constrain anime contour and cel-shading style ONLY, not clothing, scenery, pose or sunset lighting. Keep the clear hand-drawn 2D series character quality; original clothing colors.
+Exact headline: "快速出片，轻松拍好"
+Exact subtitle: "有参考，人人都是摄影师"
+Exact brand: "FloatPicture"
+Keep all headline/subtitle words exactly. Only one photographer mascot outside the screen. The overall poster is blue-and-cream, with a clean large photographed screenshot above and the wide lively lunge below.

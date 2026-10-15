@@ -1,0 +1,10 @@
+状态：待用户确认
+工具：内置 imagegen
+底图：design/store-poster-girl-pose-v1.png
+参考：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图1.jpg（仅截图内容）
+修改：恢复截图原有曝光与颜色；保留标题、背景、卡通人物身份服饰和抬手姿势。
+结果：design/store-poster-girl-pose-v2.png
+另存：E:/AndroidAPP/FloatPicture2相关材料/手机截图/虚拟手机截图/虚拟手机截图1-宣传图-女生抬手-v2.png
+检查：文字正确，女生角色与抬手姿势符合；截图仍由生成式合成，不能保证逐像素保留。
+
+Use case: precise-object-edit / compositing. Image 1 is the completed poster EDIT TARGET. Image 2 is the exact source screenshot to use. Change ONLY the screenshot INSIDE the thin dark rounded frame on the right side of image 1. Replace that interior with the complete image 2, scaled uniformly to fit that frame; use the provided source screenshot as an existing flat raster visual, do NOT invent or redraw its photographic park, cyan line art, outlines, Chinese camera labels, top icons or shutter controls. Restore source image 2's subdued original exposure and gray-green photographic background, cyan line reference, original precise person shape, original icons and labels. Preserve source screenshot contents and tall aspect ratio. Preserve the cartoon girl's small foreground overlaps in front of the frame, particularly her lowered hand and skirt. Keep the whole poster outside the screenshot unchanged: exact Chinese headline 对着参考拍, subtitle 姿势、构图更直观, FloatPicture brand, all their font styles and locations, pale blue ivory background graphics, mascot's face, hairstyle, beret, blouse, skirt, raised-arm pose, legs and sneakers, shadow, frame position and composition. Do not add any extra object, text or UI. Keep the exact vertical 9:16 poster framing. The main requirement is accurate faithful reuse of image 2 within the already designed poster.
